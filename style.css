@@ -5,11 +5,13 @@ body{
     min-height: 100vh;
     background-image: url("imgs/clouds.jpg");
 }
-.container{
+.log-container{
     text-align: center;
-    /* background: url(imgs/clouds.jpg);  */
-    /* background-size: cover; */
-    /* position:relative;  */
+    background-size: cover;
+    border: 1px solid black;
+    padding: 50px;
+    position:relative; 
+    top:40px; 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -17,45 +19,14 @@ body{
   }
 
 .button1{
-    margin-left: 0px;
-    display: flex;
-}
-
-.button2{
-    margin-left: 1050px;
-    display: flex;
-}
-.button3{
-    margin-left: 10px;
-}
-
-.desc{
-    font: bold;
-    color: white;
-    font-size: 50px;
-}
-
-.card{
-    background-color: black;
-    position: relative;
-    top: 100px;
-}
-
-.option{
     padding: 15px;
 }
-
 h1 {
-	font-family: 'Poppins', sans-serif;
-	font-weight: 300;
-	font-style: normal;
-}
-
-
-.option.active{
-    background: pink;
-    border: 1px solid black;
-    border-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    text-align: center;
+    margin-top: 30px;
 }
 
 .links {
@@ -83,27 +54,7 @@ h1 {
 }
 
 .pageTitle{
-    margin-top: 80px;
-}
-
-
-h4{
-    text-align: center;
-    margin-top: 25px;
-}
-
-.row{
-    border-bottom: 1px solid black;
-    margin-left: 0px;;
-    width: 1294px;
-    height: 99px;
-}
-
-.comment-section{
-    position: absolute;
-    right: 150px;
-    width: 500px;
-    height: 10px;
+    margin-top: 15%;
 }
 
 
