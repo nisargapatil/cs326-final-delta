@@ -1,0 +1,46 @@
+.container{
+    text-align: center;
+    background: url(imgs/clouds.jpg); 
+    background-size: cover;
+    position:relative; 
+    top:40px; 
+}
+
+.container2{
+    background: url(imgs/clouds.jpg); 
+    border: 1px solid black;
+    background-size: cover;
+    position:relative; 
+    top:40px; 
+}
+
+.button1{
+    margin-left: 0px;
+    display: flex;
+}
+
+.button2{
+    margin-left: 1050px;
+    display: flex;
+}
+.button3{
+    margin-left: 10px;
+}
+
+h1 {
+	font-family: 'Poppins', sans-serif;
+	font-weight: 300;
+	font-style: normal;
+}
+
+h4{
+    text-align: center;
+    margin-top: 25px;
+}
+
+.row{
+    border-bottom: 1px solid black;
+    margin-left: 0px;;
+    width: 1294px;
+    height: 99px;
+}
