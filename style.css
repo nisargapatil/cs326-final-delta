@@ -1,7 +1,7 @@
 
 .container{
     text-align: center;
-    background: url(13561c6cfdccb4b4e63cc963b5efdda9.jpg); 
+    background: url(imgs/clouds.jpg); 
     background-size: cover;
     position:relative; 
     top:40px; 
@@ -19,7 +19,7 @@
 
 .desc{
     font: bold;
-    color: black;
+    color: white;
     font-size: 50px;
 }
 
