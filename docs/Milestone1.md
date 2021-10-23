@@ -40,3 +40,5 @@ Contributors:
 1. Nisarga Patil (home.html, style.css, option.js, Milestone1.md, imgs/homepage.png, ratings.png, addComments.png, addProduct.png)
 
 2. Yiming Zhao (imgs/page2.png)
+
+3. Elizabeth (createAccount.html, login.html)
