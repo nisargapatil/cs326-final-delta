@@ -21,4 +21,4 @@ After clicking on the start voting button, the list of all existing products add
 
 Web App Screenshots:
 
-![](imgs/index.png)
+![](cs326-final-delta/imgs/homepage.pngimgs/index.png)
