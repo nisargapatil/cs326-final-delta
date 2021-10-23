@@ -41,4 +41,4 @@ Contributors:
 
 2. Yiming Zhao (imgs/page2.png)
 
-3. Elizabeth (createAccount.html, login.html)
+3. Elizabeth (createAccount.html, login.html, entertainmentpage-3.html)
