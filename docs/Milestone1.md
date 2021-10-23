@@ -19,11 +19,11 @@ Wireframes:
 
 2. After clicking on the start voting button, the list of all existing items in the category which user selected will be displayed. The user will have upvote and downvote options for each item. They can also click on the item name to get more details about it. There will be a button at the bottom to add an item to the polls. They can also switch categories from the top right corner or go back to the home page from the top left corner. 
 
-![Page 2](/imgs/viewRatings.png)
+![](/imgs/viewRatings.png)
 
 3. After clicking on the item name, they will be able to view more details about the item. This will display a picture of that item, numbers of upvotes/downvotes, brief description, and other details(if any). In the other section, there will be comments added by other users about this items, and also an option to add your own comment if you choose to do so.
 
-![3](/imgs/viewDetails.png)
+![](/imgs/viewDetails.png)
 
 4. If you clicked on the + Add Item button on page 2, you will be directed to this screen where you can add a picture of this product, its name and brief description, and additional details about it to create your own poll.
 
