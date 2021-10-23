@@ -52,6 +52,7 @@ ul li.active a{
     border: 10px solid white;
     transform: translate(-50%, -50%);
     position: absolute;
+    text-align: center;
 }
 
 .form{
