@@ -1,0 +1,30 @@
+
+.container{
+    text-align: center;
+    background: url(13561c6cfdccb4b4e63cc963b5efdda9.jpg); 
+    background-size: cover;
+    position:relative; 
+    top:40px; 
+  }
+
+.button1{
+    margin-left: 0px;
+    display: flex;
+}
+
+.button2{
+    margin-left: 1050px;
+    display: flex;
+}
+
+.desc{
+    font: bold;
+    color: black;
+    font-size: 50px;
+}
+
+.card{
+    background-color: black;
+    position: relative;
+    top: 100px;
+}
