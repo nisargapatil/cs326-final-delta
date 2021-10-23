@@ -28,3 +28,13 @@
     position: relative;
     top: 100px;
 }
+
+.option{
+    padding: 15px;
+}
+
+.option.active{
+    background: pink;
+    border: 1px solid black;
+    border-radius: 15px;
+}
