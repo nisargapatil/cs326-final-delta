@@ -22,3 +22,10 @@ After clicking on the start voting button, the list of all existing products add
 Web App Screenshots:
 
 ![](Web_App_Screenshots/index.png)
+
+
+Contributors:
+
+1. Nisarga Patil (home.html, style.css, option.js, Milestone1.md, docs/homepage.png)
+
+2. Yiming Zhao (docs/page2.png)
