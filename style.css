@@ -1,19 +1,20 @@
-
+head{
+    text-align: center;
+}
+body{
+    min-height: 100vh;
+    background-image: url("imgs/clouds.jpg");
+}
 .container{
     text-align: center;
-    background: url(imgs/clouds.jpg); 
-    background-size: cover;
-    position:relative; 
-    top:40px; 
-}
-
-.container2{
-    background: url(imgs/clouds.jpg); 
-    border: 1px solid black;
-    background-size: cover;
-    position:relative; 
-    top:40px; 
-}
+    /* background: url(imgs/clouds.jpg);  */
+    /* background-size: cover; */
+    /* position:relative;  */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+  }
 
 .button1{
     margin-left: 0px;
@@ -44,29 +45,47 @@
     padding: 15px;
 }
 
+h1 {
+	font-family: 'Poppins', sans-serif;
+	font-weight: 300;
+	font-style: normal;
+}
+
+
 .option.active{
     background: pink;
     border: 1px solid black;
     border-radius: 15px;
 }
 
-.account-container{
-    min-height: 100vh;
-    width: 100%;
-    padding: 10%;
-    background-image: url(imgs/clouds.jpg);
-    background-position: center;
-    background-size: cover;
-    position: relative;
-    background-size: 100%;
-    text-align: center;
+.links {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 18px;
+  }
+
+.container{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 30%; */
 }
 
-h1 {
-	font-family: 'Poppins', sans-serif;
-	font-weight: 300;
-	font-style: normal;
+.product-section{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 50px;
 }
+
+.pageTitle{
+    margin-top: 80px;
+}
+
 
 h4{
     text-align: center;
@@ -87,28 +106,4 @@ h4{
     height: 10px;
 }
 
-.product-section{
-    position: relative;
-    right: 150px;
-    width: 500px;
-    height: 10px;
-}
 
-.prod-description{
-    position: absolute;
-    bottom: 100px;
-    left: 100px;
-    font-size: 18px;
-}
-
-.links {
-    position: absolute;
-    top: 8px;
-    right: 16px;
-    font-size: 18px;
-}
-
-@viewport {
-    width: device-width ;
-    zoom: 1.0 ;
-}
