@@ -45,7 +45,8 @@ ul li.active a{
 }
 
 .container{
-    width: 500px;
+    width: 700px;
+    height: 350px;
     background-color:none;
     box-shadow: 0 0 20px 0 #999;
     top: 50%;
@@ -59,7 +60,7 @@ ul li.active a{
 }
 
 .input-field{
-    width: 400px;
+    width: 500px;
     height: 40px;
     margin-top: 20px;
     padding-left:10px;
@@ -80,9 +81,13 @@ ul li.active a{
     margin-top: 18px;
     padding: 10px;
     background-color: #47c35a;
-    font-size: 12px;
+    font-size: 18px;
     border: none;
     cursor: pointer;
+}
+
+h1{
+    padding-top: 10px;
 }
 /* form{
     display: block;
