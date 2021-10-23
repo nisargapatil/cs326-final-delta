@@ -4,8 +4,7 @@ Data Interactions:
 1.  i) Create Account or Log in to existing account 
     ii) Choose a category and Start Voting for products under the category
 
-2.  View a list of all products under a category, the number of upvotes/downvotes each product has, and the option to add your own upvote/   
-    downvote
+2.  View a list of all products under a category, the number of upvotes/downvotes each product has, and the option to add your own upvote/ downvote
 
 3.  View more details about the product such as a picture, brief description, comments about it etc. and add your own comment
 
