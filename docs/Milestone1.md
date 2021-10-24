@@ -13,7 +13,7 @@ Data Interactions:
 
 Wireframes:
 
-1. This is how the homepage is intended to look. It will have two buttons at the top to either create an account for a new user and log into an existing one. The user will be able to then choose a category from the given options (food, travel, entertainment) and start voting!!
+1. This is how the homepage is intended to look. It will have two buttons at the top to either create an account for a new user and log into an existing one. The user will be able to then choose a category from the given options (food, travel, entertainment) and they will be redirected to the voting page for that category!!
 
 ![homepage](/imgs/homepage.png)
 
@@ -50,8 +50,8 @@ Web App Screenshots:
 
 Contributors:
 
-1. Nisarga Patil (home.html, style.css, homeStyle.css, option.js, Milestone1.md, imgs/homepage.png, ratings.png, addComments.png, addProduct.png, Ratings.html, ratingsStyle.css, createPoll.html, createAccount.html, login.html)
+1. Nisarga Patil (home.html, style.css, homeStyle.css, option.js, Milestone1.md, imgs/homepage.png, ratings.png, addComments.png, addProduct.png, entertainmentRatePage.html, ratingsStyle.css, createPoll.html, createAccount.html, login.html)
 
 2. Yiming Zhao (imgs/page2.png, createPoll.html, createPoll.css, entertainmentProductPage.html)
 
-3. Elizabeth (createAccount.html, login.html, entertainmentProductPage.html, foodCreatePoll.html, foodProductPage.html, foodRatePage.html, travelCreatePoll.html, travelProduct.html, travelRatePage.html, home.html, Ratings.html, createPoll.html)
+3. Elizabeth (createAccount.html, login.html, entertainmentProductPage.html, foodCreatePoll.html, foodProductPage.html, foodRatePage.html, travelCreatePoll.html, travelProduct.html, travelRatePage.html, home.html)
