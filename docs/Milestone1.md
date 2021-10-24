@@ -34,12 +34,16 @@ Web App Screenshots:
 
 ![](Web_App_Screenshots/index.png)
 ![image](https://user-images.githubusercontent.com/86131546/138569533-e65a3c91-b3ea-402f-96f7-b3ada159b4a9.png)
+![](Web_App_Screenshots/poll.png)
+![](Web_App_Screenshots/ratings.png)
+![](Web_App_Screenshots/logIn.png)
+![](Web_App_Screenshots/createAccount.png)
 
 
 Contributors:
 
-1. Nisarga Patil (home.html, style.css, option.js, Milestone1.md, imgs/homepage.png, ratings.png, addComments.png, addProduct.png)
+1. Nisarga Patil (home.html, style.css, homeStyle.css, option.js, Milestone1.md, imgs/homepage.png, ratings.png, addComments.png, addProduct.png, Ratings.html, ratingsStyle.css, createPoll.html, createAccount.html, login.html)
 
-2. Yiming Zhao (imgs/page2.png)
+2. Yiming Zhao (imgs/page2.png, createPoll.html, createPoll.css, entertainmentpage-3.html)
 
 3. Elizabeth (createAccount.html, login.html, entertainmentProductPage.html, foodCreatePoll.html, foodProductPage.html, foodRatePage.html, travelCreatePoll.html, travelProduct.html, travelRatePage.html)
