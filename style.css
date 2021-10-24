@@ -1,81 +1,32 @@
-
-.container{
+head{
     text-align: center;
-    background: url(imgs/clouds.jpg); 
+}
+body{
+    min-height: 100vh;
+    background-image: url("imgs/clouds.jpg");
+}
+.log-container{
+    text-align: center;
     background-size: cover;
+    border: 1px solid black;
+    padding: 50px;
     position:relative; 
     top:40px; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
   }
 
 .button1{
-    margin-left: 0px;
-    display: flex;
-}
-
-.button2{
-    margin-left: 1050px;
-    display: flex;
-}
-
-.desc{
-    font: bold;
-    color: white;
-    font-size: 50px;
-}
-
-.card{
-    background-color: black;
-    position: relative;
-    top: 100px;
-}
-
-.option{
     padding: 15px;
 }
-
-.option.active{
-    background: pink;
-    border: 1px solid black;
-    border-radius: 15px;
-}
-
-.account-container{
-    min-height: 100vh;
-    width: 100%;
-    padding: 10%;
-    background-image: url(imgs/clouds.jpg);
-    background-position: center;
-    background-size: cover;
-    position: relative;
-    background-size: 100%;
-    text-align: center;
-}
-
 h1 {
-	font-family: 'Poppins', sans-serif;
-	font-weight: 300;
-	font-style: normal;
-}
-
-.comment-section{
-    position: absolute;
-    right: 150px;
-    width: 500px;
-    height: 10px;
-}
-
-.product-section{
-    position: relative;
-    right: 150px;
-    width: 500px;
-    height: 10px;
-}
-
-.prod-description{
-    position: absolute;
-    bottom: 100px;
-    left: 100px;
-    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    text-align: center;
+    margin-top: 30px;
 }
 
 .links {
@@ -85,7 +36,25 @@ h1 {
     font-size: 18px;
   }
 
-  @viewport {
-    width: device-width ;
-    zoom: 1.0 ;
-  }
+.container{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-top: 30%; */
+}
+
+.product-section{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 50px;
+}
+
+.pageTitle{
+    margin-top: 15%;
+}
+
+

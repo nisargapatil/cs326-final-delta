@@ -33,6 +33,7 @@ Wireframes:
 Web App Screenshots:
 
 ![](Web_App_Screenshots/index.png)
+![image](https://user-images.githubusercontent.com/86131546/138569533-e65a3c91-b3ea-402f-96f7-b3ada159b4a9.png)
 
 
 Contributors:
@@ -41,4 +42,4 @@ Contributors:
 
 2. Yiming Zhao (imgs/page2.png)
 
-3. Elizabeth (createAccount.html, login.html, entertainmentpage-3.html)
+3. Elizabeth (createAccount.html, login.html, entertainmentProductPage.html, foodCreatePoll.html, foodProductPage.html, foodRatePage.html, travelCreatePoll.html, travelProduct.html, travelRatePage.html)
