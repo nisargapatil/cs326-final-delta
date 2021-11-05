@@ -13,13 +13,13 @@ Application Structure
 For our API, we will need CRUD operations with endpoints for:
 1. /product/add which allows for a product to be added to the page when a request is sent to this endpoint containing the  Name, Description, Details, and image_URL of this product.
 2. /product/Lookup is a view endpoint which returns all 5 fields for the product as a JSON object
-/user/signup  which allows for a new user to sign up 
-3. /login which allows for a user to login
-4. /user/id/add/new?vote = upVote which adds an upvote from the user for the given product  provided a prod_ID, and also increments the upvote count. 
-5. /user/id/add/new?vote = downVote which adds a downvote from the user for the given product  provided a prod_ID, and also increments the downvote count. 
-6. /user/id/addedProducts which allows the user to view a list of products they have added to different categories for rating
-7. /user/id/addedProducts/delete?prod_ID which allows the user to remove a product they have added to the ratings page 
-8. /Page/id/view which returns all of the products on the given page
+3. /user/signup  which allows for a new user to sign up 
+4. /user/login which allows for a user to login
+5. /user/id/add/new?vote = upVote which adds an upvote from the user for the given product  provided a prod_ID, and also increments the upvote count. 
+6. /user/id/add/new?vote = downVote which adds a downvote from the user for the given product  provided a prod_ID, and also increments the downvote count. 
+7. /user/id/addedProducts which allows the user to view a list of products they have added to different categories for rating
+8. /user/id/addedProducts/delete?prod_ID which allows the user to remove a product they have added to the ratings page 
+9. /Page/id/view which returns all of the products on the given page
 
 Our  file structure to implement:
 1. server.js - a server that handles parsing the incoming requests with their URLs and parameters and sends that information to the correct functions. There should be a handler as well as functions for all of the CRUD operations that perform the requisite checks as well as call the required database functions
