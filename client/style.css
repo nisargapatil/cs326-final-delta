@@ -29,11 +29,11 @@ body{
     align-items: center;
 }
 
-body{
+/* body{
     background: url(imgs/clouds.jpg); 
     background-size: cover;
     padding: 20px;
-}
+} */
 .container{
     text-align: center;
 }
