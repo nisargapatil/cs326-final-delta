@@ -6,14 +6,16 @@
     top:40px; 
   }
 
-.button1{
-    margin-left: 0px;
+  .button1{
     display: flex;
+    float: left;   
 }
 
 .button2{
-    margin-left: 1050px;
     display: flex;
+    float: right;
+    margin: 5px;
+    
 }
 
 .desc{
