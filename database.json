@@ -4,6 +4,18 @@
             "name": "Asterix",
             "password": "test",
             "email": "888"
+        },
+        {
+            "name": "Nisarga",
+            "password": "abcd",
+            "email": "np@gmail.com",
+            "id": "0a7eff5b-619a-4a8e-bb96-3073fd769c1f"
+        },
+        {
+            "name": "Ariana",
+            "password": "abcdefg",
+            "email": "ag@gmail.com",
+            "id": "28f0e270-8b67-4ecd-898e-3a2a83f97c75"
         }
     ],
     "products": [
@@ -19,7 +31,8 @@
             "name": "Stranger things",
             "category": "Entertainment",
             "description": "netflix show",
-            "id": "a7819d50-fb1c-4a10-8cc1-7fadce88a4a0"
+            "id": "a7819d50-fb1c-4a10-8cc1-7fadce88a4a0",
+            "downVote": 2
         },
         {
             "name": "noodles",
@@ -29,12 +42,19 @@
             "upVote": 1
         },
         {
-            "name": "test",
-            "category": "test",
-            "description": "good",
-            "details": "none",
-            "id": "6baf6a94-b0ac-45e1-b6cb-d9bdb760efaa",
-            "upVote": 2,
+            "name": "Pizza",
+            "category": "food",
+            "description": "fast food",
+            "id": "3ade4000-644e-4186-876f-f5a8a26b6201",
+            "upVote": 0,
+            "downVote": 0
+        },
+        {
+            "name": "Concert",
+            "category": "entertainment",
+            "description": "music",
+            "id": "bf35d758-95e8-40fc-a5ff-0fbcf3cf4b5c",
+            "upVote": 1,
             "downVote": 1
         }
     ],

@@ -18,6 +18,7 @@ For our API, we will need CRUD operations with endpoints for:
 Our  file structure to implement:
 1. server.js - a server that handles parsing the incoming requests with their URLs and parameters and sends that information to the correct functions. 
 2. database.json - a file that stores the database
+3. database.js - a file that implements database logic, has functions such as write(), find(), remove(), and update() and handles any errors that may occur
 3. pageview.html - a file that renders HTML to view any page
 4. productview.html - a file that renders HTML to view any product 
 5. productview.js - a client-side JS file which pings the endpoint via fetch for Pageview/product/lookup/ and then uses the returned JSON to inject HTML (via innerHTML) into the productview.html file so that the product details can be viewed
