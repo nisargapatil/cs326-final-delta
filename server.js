@@ -22,9 +22,7 @@ if (existsSync("database.json")) {
 }
 
 createServer(async (req, res) => {
-
     const parsed = parse(req.url, true);
-
     if (parsed.pathname === '/createUser') {
         let body = '';
         req.on('data', data => body += data);
