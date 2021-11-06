@@ -2,10 +2,12 @@
 import { createServer } from 'http';
 import { parse } from 'url';
 import { writeFile, readFileSync, existsSync } from 'fs';
+import { v4 as uuid } from 'uuid';
+
 
 let database = {};
-let product_id = 0;
-let user_id = 0;
+let product_id;
+let user_id;
 
 if (existsSync("database.json")) {
     database = JSON.parse(readFileSync("database.json"));
@@ -18,6 +20,7 @@ if (existsSync("database.json")) {
 }
 
 createServer(async (req, res) => {
+
     const parsed = parse(req.url, true);
 
     if (parsed.pathname === '/createUser') {
@@ -25,7 +28,7 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
-            user_id += 1
+            user_id = uuid();
             database.users.push({
                 name: data.name,
                 password: data.password,
@@ -47,11 +50,11 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
-            product_id += 1
+            product_id = uuid();
             database.products.push({
                 name: data.name,
                 category: data.category,
-                description: "null",
+                description: data.description,
                 details: data.details,
                 id: product_id
             });
@@ -65,42 +68,32 @@ createServer(async (req, res) => {
             res.write("Product added");
         });
     }
-    else if (parsed.pathname === './productInfo'){
-        //body stores product name
+    else if (parsed.pathname === '/productInfo') {
         let body = '';
-        //body stores the data which is name
         req.on('data', data => body += data);
-        //empty object to store the product to return 
         let productObject = [];
         //stores name 
         let name = JSON.parse(body);
         //loops the database to find the product with the matching product name
-        for(let i = 0; i<database.products.length; i++){
-            if(name==database.products[i].name){
-                productObject = database.products[i];
+        for (let i of database.products) {
+            if (name === i[name]) {
+                productObject = i;
                 break;
             }
         }
         //returns the product
         res.write("Product returned");
-        res.end(JOSN.stringify(productObject));
+        res.write(JSON.stringify(productObject));
+        res.end();
     }
 
-    else if(parsed.pathname === './deleteProduct'){
-        //body stores product name
+    else if (parsed.pathname === '/deleteProduct') {
         let body = '';
-        //body stores the data which is name
         req.on('data', data => body += data);
         req.on('end', () => {
-        const name = JSON.parse(body);
-        //loops the database to find the product with the matching product name
-        for(let i = 0; i<database.products.length; i++){
-            if(name==database.products[i].name){
-                productObject = database.products[i];
-                delete database.products[i];
-                break;
-            }
-        }
+            const obj = JSON.parse(body);
+            let prod = database.products.filter((product) => { return product.name !== obj.name });
+            database.products = prod;
             writeFile("database.json", JSON.stringify(database), err => {
                 if (err) {
                     console.err(err);

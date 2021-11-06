@@ -1,1 +1,34 @@
-{"users":[{"name":"Asterix","password":"test","email":"888"}],"products":[{"name":"xyz","category":"test","description":"null","id":1}],"pages":["food","travel","entertainment"]}
+{
+    "users": [
+        {
+            "name": "Asterix",
+            "password": "test",
+            "email": "888"
+        }
+    ],
+    "products": [
+        {
+            "name": "xyz",
+            "category": "test",
+            "description": "null",
+            "id": 1
+        },
+        {
+            "name": "Paris",
+            "category": "Travel",
+            "description": "a place",
+            "id": "0dae2f90-f25b-4a2b-b261-03057292938a"
+        },
+        {
+            "name": "Stranger things",
+            "category": "Entertainment",
+            "description": "netflix show",
+            "id": "a7819d50-fb1c-4a10-8cc1-7fadce88a4a0"
+        }
+    ],
+    "pages": [
+        "food",
+        "travel",
+        "entertainment"
+    ]
+}
