@@ -84,54 +84,59 @@ createServer(async (req, res) => {
                     break;
                 }
             }
-        res.write("Product returned");
-        res.write(JSON.stringify(prod));
-        res.end();
+            res.write("Product returned");
+            res.write(JSON.stringify(prod));
+            res.end();
         });
     }
-
-    else if(parsed.pathname === '/upVote'){
+    else if (parsed.pathname === '/upvote') {
         let body = '';
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for(let i of database.products){
-                if(obj.name === i.name){
-                    i.upVote += 1;
+            for (let i of database.products) {
+                if (obj.name === i.name) {
+                    if(i.upVote){
+                        i.upVote += 1;
+                    }
+                    else{
+                        i.upVote = 1;
+                    }
                 }
             }
-
             writeFile("database.json", JSON.stringify(database), err => {
                 if (err) {
                     console.err(err);
                 } else res.end();
             });
             res.writeHead(200);
-            res.write("Product upvote");
+            res.write("Product upvoted");
         });
     }
-
-    else if(parsed.pathname === '/downVote'){
+    else if (parsed.pathname === '/downvote') {
         let body = '';
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for(let i of database.products){
-                if(obj.name === i.name){
-                    i.downVote += 1;
+            for (let i of database.products) {
+                if (obj.name === i.name) {
+                    if(i.downVote){
+                        i.downVote += 1;
+                    }
+                    else{
+                        i.downVote = 1;
+                    }
                 }
             }
-
             writeFile("database.json", JSON.stringify(database), err => {
                 if (err) {
                     console.err(err);
                 } else res.end();
             });
             res.writeHead(200);
-            res.write("Product upvote");
+            res.write("Product downvoted");
         });
     }
-
     else if (parsed.pathname === '/deleteProduct') {
         let body = '';
         req.on('data', data => body += data);
@@ -148,8 +153,6 @@ createServer(async (req, res) => {
             res.write("Product deleted");
         });
     }
-
-    
     else {
         res.writeHead(404);
         res.end();

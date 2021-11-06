@@ -1,1 +1,46 @@
-{"users":[{"name":"Asterix","password":"test","email":"888"}],"products":[{"name":"Paris","category":"Travel","description":"a place","id":"0dae2f90-f25b-4a2b-b261-03057292938a"},{"name":"Stranger things","category":"Entertainment","description":"netflix show","id":"a7819d50-fb1c-4a10-8cc1-7fadce88a4a0"},{"name":"noodles","category":"food","description":"a product","id":"5c21c9cb-d624-44e4-a78c-30db87237d9c"},{"name":"test","category":"test","description":"good","details":"none","id":"6baf6a94-b0ac-45e1-b6cb-d9bdb760efaa","upVote":2,"downVote":1}],"pages":["food","travel","entertainment"]}
+{
+    "users": [
+        {
+            "name": "Asterix",
+            "password": "test",
+            "email": "888"
+        }
+    ],
+    "products": [
+        {
+            "name": "Paris",
+            "category": "Travel",
+            "description": "a place",
+            "id": "0dae2f90-f25b-4a2b-b261-03057292938a",
+            "upVote": 2,
+            "downVote": 1
+        },
+        {
+            "name": "Stranger things",
+            "category": "Entertainment",
+            "description": "netflix show",
+            "id": "a7819d50-fb1c-4a10-8cc1-7fadce88a4a0"
+        },
+        {
+            "name": "noodles",
+            "category": "food",
+            "description": "a product",
+            "id": "5c21c9cb-d624-44e4-a78c-30db87237d9c",
+            "upVote": 1
+        },
+        {
+            "name": "test",
+            "category": "test",
+            "description": "good",
+            "details": "none",
+            "id": "6baf6a94-b0ac-45e1-b6cb-d9bdb760efaa",
+            "upVote": 2,
+            "downVote": 1
+        }
+    ],
+    "pages": [
+        "food",
+        "travel",
+        "entertainment"
+    ]
+}
