@@ -58,7 +58,9 @@ createServer(async (req, res) => {
                 category: data.category,
                 description: data.description,
                 details: data.details,
-                id: product_id
+                id: product_id,
+                upVote: 0,
+                downVote: 0
             });
 
             writeFile("database.json", JSON.stringify(database), err => {
@@ -88,6 +90,48 @@ createServer(async (req, res) => {
         });
     }
 
+    else if(parsed.pathname === '/upVote'){
+        let body = '';
+        req.on('data', data => body += data);
+        req.on('end', () => {
+            let obj = JSON.parse(body);
+            for(let i of database.products){
+                if(obj.name === i.name){
+                    i.upVote += 1;
+                }
+            }
+
+            writeFile("database.json", JSON.stringify(database), err => {
+                if (err) {
+                    console.err(err);
+                } else res.end();
+            });
+            res.writeHead(200);
+            res.write("Product upvote");
+        });
+    }
+
+    else if(parsed.pathname === '/downVote'){
+        let body = '';
+        req.on('data', data => body += data);
+        req.on('end', () => {
+            let obj = JSON.parse(body);
+            for(let i of database.products){
+                if(obj.name === i.name){
+                    i.downVote += 1;
+                }
+            }
+
+            writeFile("database.json", JSON.stringify(database), err => {
+                if (err) {
+                    console.err(err);
+                } else res.end();
+            });
+            res.writeHead(200);
+            res.write("Product upvote");
+        });
+    }
+
     else if (parsed.pathname === '/deleteProduct') {
         let body = '';
         req.on('data', data => body += data);
@@ -104,6 +148,8 @@ createServer(async (req, res) => {
             res.write("Product deleted");
         });
     }
+
+    
     else {
         res.writeHead(404);
         res.end();
