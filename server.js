@@ -153,6 +153,17 @@ createServer(async (req, res) => {
             res.write("Product deleted");
         });
     }
+    else if (parsed.pathname === '/viewPage') {
+        let body = '';
+        req.on('data', data => body += data);
+        req.on('end', () => {
+            const obj = JSON.parse(body);
+            //let prod = database.pages[obj.name];
+            res.writeHead(200);
+            res.write("Viewing the page");
+            res.end();
+        });
+    }
     else {
         res.writeHead(404);
         res.end();
