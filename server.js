@@ -107,6 +107,7 @@ createServer(async (req, res) => {
     }
     else {
         res.writeHead(404);
+        res.write("Invalid command.");
         res.end();
     }
 }).listen(port);
