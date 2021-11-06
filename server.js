@@ -65,6 +65,51 @@ createServer(async (req, res) => {
             res.write("Product added");
         });
     }
+    else if (parsed.pathname === './productInfo'){
+        //body stores product name
+        let body = '';
+        //body stores the data which is name
+        req.on('data', data => body += data);
+        //empty object to store the product to return 
+        let productObject = [];
+        //stores name 
+        let name = JSON.parse(body);
+        //loops the database to find the product with the matching product name
+        for(let i = 0; i<database.products.length; i++){
+            if(name==database.products[i].name){
+                productObject = database.products[i];
+                break;
+            }
+        }
+        //returns the product
+        res.write("Product returned");
+        res.end(JOSN.stringify(productObject));
+    }
+
+    else if(parsed.pathname === './deleteProduct'){
+        //body stores product name
+        let body = '';
+        //body stores the data which is name
+        req.on('data', data => body += data);
+        req.on('end', () => {
+        const name = JSON.parse(body);
+        //loops the database to find the product with the matching product name
+        for(let i = 0; i<database.products.length; i++){
+            if(name==database.products[i].name){
+                productObject = database.products[i];
+                delete database.products[i];
+                break;
+            }
+        }
+            writeFile("database.json", JSON.stringify(database), err => {
+                if (err) {
+                    console.err(err);
+                } else res.end();
+            });
+            res.writeHead(200);
+            res.write("Product deleted");
+        });
+    }
     else {
         res.writeHead(404);
         res.end();
