@@ -15,7 +15,8 @@ if (existsSync("database.json")) {
     database = {
         users: [],
         products: [],
-        pages: ['food', 'travel', 'entertainment']
+        pages: ['food', 'travel', 'entertainment'],
+        viewed: []
     };
 }
 
@@ -70,21 +71,20 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/productInfo') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
-        let productObject = [];
-        //stores name 
-        let name = JSON.parse(body);
-        //loops the database to find the product with the matching product name
-        for (let i of database.products) {
-            if (name === i[name]) {
-                productObject = i;
-                break;
+        req.on('end', () => {
+            let obj = JSON.parse(body);
+            for (let i of database.products) {
+                if (obj.name === i.name) {
+                    prod = i;
+                    break;
+                }
             }
-        }
-        //returns the product
         res.write("Product returned");
-        res.write(JSON.stringify(productObject));
+        res.write(JSON.stringify(prod));
         res.end();
+        });
     }
 
     else if (parsed.pathname === '/deleteProduct') {

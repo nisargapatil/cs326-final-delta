@@ -8,12 +8,6 @@
     ],
     "products": [
         {
-            "name": "xyz",
-            "category": "test",
-            "description": "null",
-            "id": 1
-        },
-        {
             "name": "Paris",
             "category": "Travel",
             "description": "a place",
@@ -24,6 +18,12 @@
             "category": "Entertainment",
             "description": "netflix show",
             "id": "a7819d50-fb1c-4a10-8cc1-7fadce88a4a0"
+        },
+        {
+            "name": "noodles",
+            "category": "food",
+            "description": "a product",
+            "id": "5c21c9cb-d624-44e4-a78c-30db87237d9c"
         }
     ],
     "pages": [
