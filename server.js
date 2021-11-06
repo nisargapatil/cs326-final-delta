@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid';
 let database = {};
 let product_id;
 let user_id;
+let port = process.env.PORT || 8080;
 
 if (existsSync("database.json")) {
     database = JSON.parse(readFileSync("database.json"));
@@ -107,5 +108,5 @@ createServer(async (req, res) => {
         res.writeHead(404);
         res.end();
     }
-}).listen(8080);
+}).listen(port);
 
