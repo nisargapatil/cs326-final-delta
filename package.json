@@ -1,61 +1,32 @@
 {
-  "name": "wevote",
-  "type": "module",
-  "scripts": {
-    "start": "node server/index.js",
-    "lint": "npx eslint ",
-    "dev": "nodemon server.js"
-  },
-  "devDependencies": {
-    "eslint": "^7.32.0",
-    "http-server": "^0.12.3",
-    "nodemon": "^2.0.14"
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es2021": true,
-      "node": true
-    },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-      "ecmaVersion": 12,
-      "sourceType": "module"
-    },
-    "rules": {
-      "no-var": "error",
-      "eqeqeq": "error",
-      "semi": [
-        "error",
-        "always"
-      ],
-      "curly": [
-        "warn",
-        "all"
-      ],
-      "prefer-const": [
-        "warn",
-        {}
-      ]
-    }
-  },
-  "dependencies": {
-    "uuid": "^8.3.2"
-  },
-  "description": "app",
+  "name": "cs326-final-delta",
   "version": "1.0.0",
+  "description": "",
+  "type": "module",
   "main": "server.js",
   "directories": {
     "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/elizabethseto/cs326-final-delta.git"
   },
-  "author": "",
+  "keywords": [
+    "heroku"
+  ],
+  "author": "Nisarga Patil",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/elizabethseto/cs326-final-delta/issues"
   },
-  "homepage": "https://github.com/elizabethseto/cs326-final-delta#readme"
+  "homepage": "https://github.com/elizabethseto/cs326-final-delta#readme",
+  "dependencies": {
+    "nodemon": "^2.0.14",
+    "uuid": "^8.3.2"
+  }
 }
