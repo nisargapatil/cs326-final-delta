@@ -66,7 +66,6 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            res.write("Product returned");
             res.write(JSON.stringify(find(database, obj)));
             res.end();
         });
