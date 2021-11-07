@@ -1,0 +1,2 @@
+curl -X POST  -H 'Content-Type: application/json' -d '{ "name": "abc", "password": "123", "email": "abc@123.com"}' localhost:8080/createUser
+

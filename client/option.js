@@ -3,13 +3,13 @@
 function select(id){
     // document.getElementById(id).classList.add("active");
     if(id=="Op1"){
-        window.location = "foodRatePage.html";
+        window.location = "viewPage?page=foodRatePage";
     }
     if(id=="Op3"){
-        window.location = "entertainmentRatePage.html";
+        window.location = "viewPage?page=entertainmentRatePage";
     }
     if(id=="Op2"){
-        window.location = "travelRatePage.html";
+        window.location = "viewPage?page=travelRatePage";
     }
 }
 
@@ -17,4 +17,3 @@ function select(id){
 document.getElementById("Op1").addEventListener('click', ()=>select("Op1"));
 document.getElementById("Op2").addEventListener('click', ()=>select("Op2"));
 document.getElementById("Op3").addEventListener('click', ()=>select("Op3"));
-document.getElementById("vote").addEventListener('click', ()=>alert());
