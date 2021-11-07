@@ -119,6 +119,7 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/upvote') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
@@ -130,6 +131,8 @@ createServer(async (req, res) => {
                     else{
                         i.upVote = 1;
                     }
+                    prod = i;
+                    break;
                 }
             }
             writeFile("database.json", JSON.stringify(database), err => {
@@ -137,12 +140,19 @@ createServer(async (req, res) => {
                     console.err(err);
                 } else res.end();
             });
-            res.writeHead(200);
-            res.write("Product upvoted");
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+            }
+            res.end();    
         });
     }
     else if (parsed.pathname === '/downvote') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
@@ -154,6 +164,8 @@ createServer(async (req, res) => {
                     else{
                         i.downVote = 1;
                     }
+                    prod = i;
+                    break;
                 }
             }
             writeFile("database.json", JSON.stringify(database), err => {
@@ -161,8 +173,14 @@ createServer(async (req, res) => {
                     console.err(err);
                 } else res.end();
             });
-            res.writeHead(200);
-            res.write("Product downvoted");
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+            }
+            res.end();    
         });
     }
     else if (parsed.pathname === '/deleteProduct') {

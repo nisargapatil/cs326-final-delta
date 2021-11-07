@@ -14,6 +14,28 @@ async function getJSON(url, payload) {
     return res;
 }
 
+async function upVote(name) {
+    let param = {};
+    let url = '/upvote';
+    param['name'] = name;
+    name = name.replace(/%20/g, " ");
+    let res = await getJSON(url, param);
+    let json = await res.text();
+    let obj = JSON.parse(json);
+    document.getElementById(name + "_upButton").innerHTML = 'Upvote (' + obj.upVote + ')';
+}
+
+async function downVote(name) {
+    let param = {};
+    let url = '/downvote';
+    param['name'] = name;
+    name = name.replace(/%20/g, " ");
+    let res = await getJSON(url, param);
+    let json = await res.text();
+    let obj = JSON.parse(json);
+    document.getElementById(name + "_downButton").innerHTML = 'Downvote (' + obj.downVote + ')';
+}
+
 async function render() {
     let pageIndex = window.location.href.indexOf("page=");
     let sepIndex = window.location.href.indexOf("&");
@@ -37,8 +59,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
                 <img src="./imgs/foodPic.jpg" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark">Upvote</button>
-                <button type="button" class="btn btn-dark">Downvote</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=foodProductPage&name=${obj[i].name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
@@ -46,7 +68,11 @@ async function render() {
                 html += htmlSegment;
             }
             container2.innerHTML = html;
-        }
+            for (let i=0; i < obj.length; i++) {
+                document.getElementById(obj[i].name + "_upButton").addEventListener('click', function() {upVote(obj[i].name)});
+                document.getElementById(obj[i].name + "_downButton").addEventListener('click', function() {downVote(obj[i].name)});
+            }
+    }
         else if (page === 'foodProductPage') {
             let nameIndex = window.location.href.indexOf("name=");
         
@@ -64,8 +90,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
                 <img src="./imgs/foodPic.jpg" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark">Upvote Number</button>
-                <button type="button" class="btn btn-dark">Downvote Number</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
 
                 html += htmlSegment;
@@ -99,8 +125,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
                 <img src="./imgs/travelPic.jpg" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark">Upvote</button>
-                <button type="button" class="btn btn-dark">Downvote</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=travelProductPage&name=${obj[i].name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
@@ -108,6 +134,10 @@ async function render() {
                 html += htmlSegment;
             }
             container2.innerHTML = html;
+            for (let i=0; i < obj.length; i++) {
+                document.getElementById(obj[i].name + "_upButton").addEventListener('click', function() {upVote(obj[i].name)});
+                document.getElementById(obj[i].name + "_downButton").addEventListener('click', function() {downVote(obj[i].name)});
+            }
         }
         else if (page === 'travelProductPage') {
             let nameIndex = window.location.href.indexOf("name=");
@@ -126,8 +156,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
                 <img src="./imgs/travelPic.jpg" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark">Upvote Number</button>
-                <button type="button" class="btn btn-dark">Downvote Number</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
 
                 html += htmlSegment;
@@ -161,8 +191,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
                 <img src="./imgs/movie.jpg" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark">Upvote</button>
-                <button type="button" class="btn btn-dark">Downvote</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=entertainmentProductPage&name=${obj[i].name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
@@ -170,6 +200,10 @@ async function render() {
                 html += htmlSegment;
             }
             container2.innerHTML = html;
+            for (let i=0; i < obj.length; i++) {
+                document.getElementById(obj[i].name + "_upButton").addEventListener('click', function() {upVote(obj[i].name)});
+                document.getElementById(obj[i].name + "_downButton").addEventListener('click', function() {downVote(obj[i].name)});
+            }
         }
         else if (page === 'entertainmentProductPage') {
             let nameIndex = window.location.href.indexOf("name=");
@@ -188,8 +222,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
                 <img src="./imgs/movie.jpg" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark">Upvote Number</button>
-                <button type="button" class="btn btn-dark">Downvote Number</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
 
                 html += htmlSegment;
