@@ -41,6 +41,7 @@ createServer(async (req, res) => {
     const parsed = parse(req.url, true);
     if (parsed.pathname === '/createUser') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
@@ -57,8 +58,48 @@ createServer(async (req, res) => {
                     console.err(err);
                 } else res.end();
             });
-            res.writeHead(200);
-            res.write("User created");
+            for (let i of database.users) {
+                if (data.name === i.name) {
+                    prod = i;
+                    break;
+                }
+            }
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+                res.write('Error creating user');
+            }
+            res.end();    
+        });
+    }
+    else if (parsed.pathname === '/login') {
+        let body = '';
+        let prod;
+        req.on('data', data => body += data);
+        req.on('end', () => {
+            const data = JSON.parse(body);
+            let prod;
+            for (let i of database.users) {
+                if (data.username === i.name &&
+                    data.password === i.password) {
+                    prod = i;
+                    break;
+                }
+            }
+            if (prod !== undefined) {
+                let param = {};
+                param['username'] = prod.name;
+                res.writeHead(200);
+                res.write(JSON.stringify(param));
+            }
+            else {
+                res.writeHead(404);
+                res.write('Error creating user ' + data.username);
+            }
+            res.end();    
         });
     }
     else if (parsed.pathname === '/addProduct') {

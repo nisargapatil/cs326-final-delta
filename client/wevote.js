@@ -1,3 +1,14 @@
+function isLogin() {
+    let isLogin = false;
+    let myStorage = window.localStorage;
+    if (myStorage !== undefined) {
+        let user = myStorage.getItem('user');
+        if (user !== undefined) {
+            isLogin = true;
+        }
+    }
+    return isLogin;
+}
 
 async function getJSON(url, payload) {
     let data = new FormData();
@@ -62,6 +73,80 @@ async function addFoodProduct() {
     }
 }
 
+async function createUser() {
+    let url = '/createUser';
+    let name = document.getElementById('name');
+    let email = document.getElementById('email');
+    let password = document.getElementById('password');
+    let confirm_password = document.getElementById('confirm_password');
+
+    if (username !== undefined && username.value.length > 0 &&
+        email !== undefined && email.value.length > 0 &&
+        password !== undefined && password.value.length > 0 &&
+        confirm_password !== undefined && confirm_password.value.length > 0) {
+        if (password.value !== confirm_password.value) {
+            alert('Password does not match!');
+        }
+        else {
+            let param = {};
+            param['name'] = username.value;
+            param['email'] = email.value;
+            param['password'] = password.value;
+            let res = await getJSON(url, param);
+            let json = await res.text();
+            let obj = JSON.parse(json);
+            if (obj !== undefined && obj.name !== undefined) {
+               alert("User " + obj.name + " added sucessfully.")
+            }
+            else {
+                alert("Error adding user " + name.value);
+            }
+        }
+    }
+    else {
+        alert('Invalid input');
+    }
+}
+
+async function login() {
+    let url = '/login';
+    let username = document.getElementById('username');
+    let password = document.getElementById('password');
+
+    if (username !== undefined && username.value.length > 0 &&
+        password !== undefined && password.value.length > 0) {
+        let param = {};
+        param['username'] = username.value;
+        param['password'] = password.value;
+        let res = await getJSON(url, param);
+        let json = await res.text();
+        if (json !== undefined) {
+            let obj;
+            try {
+                obj = JSON.parse(json);
+            }
+            catch (ex) {
+                // Nothing to do
+            }
+            finally {
+                // Nothing to do
+            }
+            if (obj !== undefined && obj.username !== undefined) {
+                alert("User " + obj.username + " login sucessfully.")
+                window.location.replace("/viewPage?page=home");
+            }
+            else {
+                alert("Error login as user " + username.value);
+            }
+        }
+        else {
+            alert("Error login as user " + username.value);
+        }
+    }
+    else {
+        alert('Invalid input');
+    }
+}
 async function addTravelProduct() {
     let url = '/addProduct';
     let name = document.getElementById('product_name');
@@ -125,6 +210,10 @@ async function render() {
         }
         else {
             page = window.location.href.substr(pageIndex + 5);
+        }
+
+        if (isLogin() === false) {
+            alert('Login');
         }
         if (page === 'foodRatePage') {
             let url = '/productSummary';
@@ -381,6 +470,35 @@ async function render() {
             container.innerHTML = html;
             document.getElementById("addEntertainment_button").addEventListener('click', function() {addEntertainmentProduct()});
         }
+        else if (page === 'createAccount') {
+            let url = '/createUser';
+
+            let html = `    <div class="itemCardx">
+            <h5>CREATE YOUR ACCOUNT</h5><br>
+            Email <br> <input type="text" id="email" /><br /><br>
+            Username <br> <input type="text" id="username" /><br /><br>
+            Password <br> <input type="password" id="password" /><br /><br>
+            Confirm Password <br> <input type="password" id="confirm_password" /><br />
+            <button type="button" class="btn btn-dark" id="createUser_button">Create Your Account</button><br>
+            </div>
+        `;
+            let container = document.getElementById('log-container');
+            container.innerHTML = html;
+            document.getElementById("createUser_button").addEventListener('click', function() {createUser()});
+        }
+        else if (page === 'login') {
+            let url = '/login';
+
+            let html = `    <div class="itemCardx">
+            <h5>LOG INTO EXISTING ACCOUNT</h5><br>   
+            Username <br> <input type="text" id="username" /><br /><br>
+            Password <br> <input type="password" id="password" /><br /><br>
+            <button type="button" class="btn btn-dark" id="login_button">Login</button>
+            </div>`;
+            let container = document.getElementById('log-container');
+            container.innerHTML = html;
+            document.getElementById("login_button").addEventListener('click', function() {login()});
+        }        
     }
 }
 
