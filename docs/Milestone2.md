@@ -30,7 +30,6 @@ When the user choosees a category, the user would be directed to that specific c
 
 ![image](https://user-images.githubusercontent.com/86131546/140763859-1c07e9b4-38ed-4b75-9bab-0314a366b54e.png)
 
-The Heroku Application can be accessed via: https://wevote326.herokuapp.com/
 For example, if the user clicked on the travel category, he could see places such as Paris, Mexico, and Tokyo. Within this page, the view button will direct the user to a more detailed page of the place he or she selected. The user would also be able to upvote and down a 
 particular place. 
 
@@ -42,3 +41,4 @@ Additionlly, the user could also add an item or create a poll himself/herself. T
 
 These functionalities apply to all the three categories available: Food, Travel, and Entertainment.
 
+The Heroku Application can be accessed via: https://wevote326.herokuapp.com/
