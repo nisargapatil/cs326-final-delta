@@ -24,6 +24,11 @@ Our  file structure to implement:
 5. productview.js - a client-side JS file which pings the endpoint via fetch for Pageview/product/lookup/ and then uses the returned JSON to inject HTML (via innerHTML) into the productview.html file so that the product details can be viewed
 
 
+Contributors:
+Yiming: Re-worked the front end user interface, contributed to the backend design.
+Elizabeth:
+Nisarga: 
+
 ![image](https://user-images.githubusercontent.com/86131546/140763539-0b31dac9-e103-4364-9c95-469a8a2a8f2c.png)
 
 When the user choosees a category, the user would be directed to that specific category with avilable items that's been posted by other users with ratings attached to each one of item.   
