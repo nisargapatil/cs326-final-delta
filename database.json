@@ -132,24 +132,6 @@
             "downVote": 2
         },
         {
-            "name": "movie",
-            "category": "Entertainment",
-            "description": "movie",
-            "details": "movie",
-            "id": "63f73d1d-9fc5-4c0a-ab31-0d88d351502f",
-            "upVote": 0,
-            "downVote": 0
-        },
-        {
-            "name": "travel",
-            "category": "Travel",
-            "description": "travel",
-            "details": "travel",
-            "id": "2b5b6c87-67ad-4030-b800-f6875fa56936",
-            "upVote": 0,
-            "downVote": 0
-        },
-        {
             "name": "New York",
             "category": "Travel",
             "description": "City",
