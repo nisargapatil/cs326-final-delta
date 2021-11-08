@@ -23,10 +23,9 @@ Our  file structure to implement:
 4. productview.html - a file that renders HTML to view any product 
 5. productview.js - a client-side JS file which pings the endpoint via fetch for Pageview/product/lookup/ and then uses the returned JSON to inject HTML (via innerHTML) into the productview.html file so that the product details can be viewed
 
-
 Contributors:
 Yiming: Re-worked the front end user interface, contributed to the backend design.
-Elizabeth:
+Elizabeth: worked on the backend skeleton code, front-end emplementation, render all data for each page, adding new item feature, create functioning upvote/downvote button, create functioning create account and login
 Nisarga: 
 
 ![image](https://user-images.githubusercontent.com/86131546/140763539-0b31dac9-e103-4364-9c95-469a8a2a8f2c.png)
@@ -53,3 +52,5 @@ Lastly, the user can create an account, or log in to an existing account.
 These functionalities apply to all the three categories available: Food, Travel, and Entertainment.
 
 The Heroku Application can be accessed via: https://wevote326.herokuapp.com/
+
+
