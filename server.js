@@ -63,6 +63,7 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/addProduct') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
@@ -82,8 +83,20 @@ createServer(async (req, res) => {
                     console.err(err);
                 } else res.end();
             });
-            res.writeHead(200);
-            res.write("Product added");
+            for (let i of database.products) {
+                if (data.name === i.name) {
+                    prod = i;
+                    break;
+                }
+            }
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+            }
+            res.end();    
         });
     }
     else if (parsed.pathname === '/productInfo') {
