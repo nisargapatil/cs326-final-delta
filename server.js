@@ -284,13 +284,12 @@ createServer(async (req, res) => {
          else if(/^\/[a-zA-Z0-9\/]*.png$/.test(req.url.toString())){
             sendFileContent(res, req.url.toString().substring(1), "image/png");
          }
-         else {
+         
             res.writeHead(404);
             res.write('Page Not Found!');
             res.end();
     
          }
          
-    }
-}).listen(port);
+    }).listen(port);
 

@@ -19,14 +19,19 @@ Our  file structure to implement:
 1. server.js - a server that handles parsing the incoming requests with their URLs and parameters and sends that information to the correct functions. 
 2. database.json - a file that stores the database
 3. database.js - a file that implements database logic, has functions such as write(), find(), remove(), and update() and handles any errors that may occur
-3. pageview.html - a file that renders HTML to view any page
-4. productview.html - a file that renders HTML to view any product 
-5. productview.js - a client-side JS file which pings the endpoint via fetch for Pageview/product/lookup/ and then uses the returned JSON to inject HTML (via innerHTML) into the productview.html file so that the product details can be viewed
+3. foodProductPage.html - a file that renders HTML to view descriptions about the products in the food category
+4. entertainmentRatePage.html - a file that renders HTML to view any product in the entertainment category
+5. travelRatePage.html - a file that renders HTML to view any product in the travel category
+6. foodRatePage.html - a file that renders HTML to view any product in the food category
+7. entertainmentProductPage.html - a file that renders HTML to view descriptions about the products in the entertainment category
+8. travelProductPage.html - a file that renders HTML to view descriptions about the products in the travel category
+9. foodCreatePoll.html - a file that renders HTML to create a poll to add a product in the food category
+10. wevote.js - a client-side JS file which pings the endpoint via fetch for viewPage/productInfo/addProduct/etc. and then uses the returned JSON to inject HTML (via innerHTML) into html files so that this data can be viewed
 
 Contributors:
-Yiming: Re-worked the front end user interface, contributed to the backend design.
-Elizabeth: worked on the backend skeleton code, front-end emplementation, render all data for each page, adding new item feature, create functioning upvote/downvote button, create functioning create account and login
-Nisarga: 
+1. Nisarga : Worked on part 0 and part 1 - Milestone2.md, setup.md, backend on server.js, database logic on database.js, and part 3- heroku deployment.
+2. Yiming: Re-worked the front end user interface, contributed to the backend design.
+3. Elizabeth: worked on the front-end emplementation - wevote.js, render data for HTML pages such as adding new item feature, product description view, functioning upvote/downvote buttons, create functioning create account and login
 
 ![image](https://user-images.githubusercontent.com/86131546/140763539-0b31dac9-e103-4364-9c95-469a8a2a8f2c.png)
 
