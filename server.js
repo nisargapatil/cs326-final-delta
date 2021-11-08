@@ -173,10 +173,26 @@ createServer(async (req, res) => {
         let file = 'client/' + page + ".html";
         sendFileContent(res, file, content);
     }
-    else {
-        res.writeHead(404);
-        res.write('Page Not Found!');
-        res.end();
+    else {           
+        if(/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())){
+            sendFileContent(res, req.url.toString().substring(1), "text/css");
+        }
+        else if(/^\/[a-zA-Z0-9\/]*.js$/.test(req.url.toString())){
+            sendFileContent(res, req.url.toString().substring(1), "text/javascript");
+         }
+         else if(/^\/[a-zA-Z0-9\-\.\_\/]*.jpg$/.test(req.url.toString())){
+            sendFileContent(res, req.url.toString().substring(1), "image/jpg");
+         }
+         else if(/^\/[a-zA-Z0-9\/]*.png$/.test(req.url.toString())){
+            sendFileContent(res, req.url.toString().substring(1), "image/png");
+         }
+         else {
+            res.writeHead(404);
+            res.write('Page Not Found!');
+            res.end();
+    
+         }
+         
     }
 
 }).listen(port);
