@@ -44,6 +44,12 @@ particular place.
 
 Additionlly, the user could also add an item or create a poll himself/herself. To do so, the user can simply click on "Add New Item" and insert all the details about the item he would like to include.
 
+![image](https://user-images.githubusercontent.com/86131546/140770207-359ef8dc-57f0-4dd0-8016-47c6609caee4.png)
+
+![image](https://user-images.githubusercontent.com/86131546/140770244-c4a94844-0a9d-4ef9-ae77-e4e9f0024f4f.png)
+
+Lastly, the user can create an account, or log in to an existing account. 
+
 These functionalities apply to all the three categories available: Food, Travel, and Entertainment.
 
 The Heroku Application can be accessed via: https://wevote326.herokuapp.com/
