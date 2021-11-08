@@ -22,3 +22,6 @@ Our  file structure to implement:
 3. pageview.html - a file that renders HTML to view any page
 4. productview.html - a file that renders HTML to view any product 
 5. productview.js - a client-side JS file which pings the endpoint via fetch for Pageview/product/lookup/ and then uses the returned JSON to inject HTML (via innerHTML) into the productview.html file so that the product details can be viewed
+
+![image](https://user-images.githubusercontent.com/86131546/140763539-0b31dac9-e103-4364-9c95-469a8a2a8f2c.png)
+
