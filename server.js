@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { parse } from 'url';
 import { readFile, writeFile, readFileSync, existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
-
+import { write, update_user, update_product, update_vote, find, remove } from './database.js';
 
 let database = {};
 let product_id;
@@ -21,21 +21,21 @@ if (existsSync("database.json")) {
     };
 }
 
-function sendFileContent(response, fileName, contentType){
-    
-    readFile(fileName, function(err, data){
-      if(err){
-        response.writeHead(404);
-        response.write("Not Found!");
-      }
-      else{
-        response.writeHead(200, {'Content-Type': contentType});
-        response.write(data);
+function sendFileContent(response, fileName, contentType) {
 
-        response.end();
-      }
+    readFile(fileName, function (err, data) {
+        if (err) {
+            response.writeHead(404);
+            response.write("Not Found!");
+        }
+        else {
+            response.writeHead(200, { 'Content-Type': contentType });
+            response.write(data);
+
+            response.end();
+        }
     });
-  }
+}
 
 createServer(async (req, res) => {
     const parsed = parse(req.url, true);
@@ -46,33 +46,11 @@ createServer(async (req, res) => {
         req.on('end', () => {
             const data = JSON.parse(body);
             user_id = uuid();
-            database.users.push({
-                name: data.name,
-                password: data.password,
-                email: data.email,
-                id: user_id
-            });
-
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
-            for (let i of database.users) {
-                if (data.name === i.name) {
-                    prod = i;
-                    break;
-                }
-            }
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-                res.write('Error creating user');
-            }
-            res.end();    
+            update_user(database,data,user_id);
+             write(database);
+             res.writeHead(200);
+             res.write("User created");
+             res.end();
         });
     }
     else if (parsed.pathname === '/login') {
@@ -99,60 +77,29 @@ createServer(async (req, res) => {
                 res.writeHead(404);
                 res.write('Error creating user ' + data.username);
             }
-            res.end();    
+            res.end();
         });
     }
     else if (parsed.pathname === '/addProduct') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
             product_id = uuid();
-            database.products.push({
-                name: data.name,
-                category: data.category,
-                description: data.description,
-                details: data.details,
-                id: product_id,
-                upVote: 0,
-                downVote: 0
-            });
-
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
-            for (let i of database.products) {
-                if (data.name === i.name) {
-                    prod = i;
-                    break;
-                }
-            }
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-            }
-            res.end();    
+            update_product(database,data,product_id);
+            write(database);
+            res.writeHead(200);
+            res.write("Product added");
+            res.end();
         });
     }
     else if (parsed.pathname === '/productInfo') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for (let i of database.products) {
-                if (obj.name === i.name) {
-                    prod = i;
-                    break;
-                }
-            }
-            res.write(JSON.stringify(prod));
+            res.write("Product returned");
+            res.write(JSON.stringify(find(database, obj)));
             res.end();
         });
     }
@@ -173,68 +120,26 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/upvote') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for (let i of database.products) {
-                if (obj.name === i.name) {
-                    if(i.upVote){
-                        i.upVote += 1;
-                    }
-                    else{
-                        i.upVote = 1;
-                    }
-                    prod = i;
-                    break;
-                }
-            }
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-            }
-            res.end();    
+            update_vote(database, obj, true);
+            write(database);
+            res.writeHead(200);
+            res.write("Product upvoted");
+            res.end();
         });
     }
     else if (parsed.pathname === '/downvote') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for (let i of database.products) {
-                if (obj.name === i.name) {
-                    if(i.downVote){
-                        i.downVote += 1;
-                    }
-                    else{
-                        i.downVote = 1;
-                    }
-                    prod = i;
-                    break;
-                }
-            }
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-            }
-            res.end();    
+            update_vote(database, obj, false);
+            write(database,obj,false);
+            res.writeHead(200);
+            res.write("Product downvoted");
+            res.end();
         });
     }
     else if (parsed.pathname === '/deleteProduct') {
@@ -242,17 +147,15 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             const obj = JSON.parse(body);
-            let prod = database.products.filter((product) => { return product.name !== obj.name });
+            let prod = remove(database, obj);
             database.products = prod;
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
+            write(database);
             res.writeHead(200);
             res.write("Product deleted");
+            res.end();
         });
     }
+
     else if (parsed.pathname === '/' || parsed.pathname === '/viewPage') {
         let page = 'home'
         let content = 'text/html'
@@ -261,35 +164,20 @@ createServer(async (req, res) => {
                 if (key === 'page') {
                     page = value;
                     break;
-                } 
-            }          
+                }
+            }
         }
-
         if (page.indexOf('.css') > 0) {
             content = 'text/css';
         }
         let file = 'client/' + page + ".html";
         sendFileContent(res, file, content);
     }
-    else {           
-        if(/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())){
-            sendFileContent(res, req.url.toString().substring(1), "text/css");
-        }
-        else if(/^\/[a-zA-Z0-9\/]*.js$/.test(req.url.toString())){
-            sendFileContent(res, req.url.toString().substring(1), "text/javascript");
-         }
-         else if(/^\/[a-zA-Z0-9\-\.\_\/]*.jpg$/.test(req.url.toString())){
-            sendFileContent(res, req.url.toString().substring(1), "image/jpg");
-         }
-         else if(/^\/[a-zA-Z0-9\/]*.png$/.test(req.url.toString())){
-            sendFileContent(res, req.url.toString().substring(1), "image/png");
-         }
-         
-            res.writeHead(404);
-            res.write('Page Not Found!');
-            res.end();
-    
-         }
-         
-    }).listen(port);
+    else {
+        res.writeHead(404);
+        res.write('Page Not Found!');
+        res.end();
+    }
+
+}).listen(port);
 
