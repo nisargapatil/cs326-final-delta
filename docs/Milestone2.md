@@ -23,5 +23,22 @@ Our  file structure to implement:
 4. productview.html - a file that renders HTML to view any product 
 5. productview.js - a client-side JS file which pings the endpoint via fetch for Pageview/product/lookup/ and then uses the returned JSON to inject HTML (via innerHTML) into the productview.html file so that the product details can be viewed
 
+
 ![image](https://user-images.githubusercontent.com/86131546/140763539-0b31dac9-e103-4364-9c95-469a8a2a8f2c.png)
+
+When the user choosees a category, the user would be directed to that specific category with avilable items that's been posted by other users with ratings attached to each one of item.   
+
+![image](https://user-images.githubusercontent.com/86131546/140763859-1c07e9b4-38ed-4b75-9bab-0314a366b54e.png)
+
+The Heroku Application can be accessed via: https://wevote326.herokuapp.com/
+For example, if the user clicked on the travel category, he could see places such as Paris, Mexico, and Tokyo. Within this page, the view button will direct the user to a more detailed page of the place he or she selected. The user would also be able to upvote and down a 
+particular place. 
+
+![image](https://user-images.githubusercontent.com/86131546/140764164-dd8aebd1-436c-43c9-992c-e1e4be9ec36a.png)
+
+![image](https://user-images.githubusercontent.com/86131546/140764458-e05742e6-133c-42fd-881f-a9e4a326fceb.png)
+
+Additionlly, the user could also add an item or create a poll himself/herself. To do so, the user can simply click on "Add New Item" and insert all the details about the item he would like to include.
+
+These functionalities apply to all the three categories available: Food, Travel, and Entertainment.
 
