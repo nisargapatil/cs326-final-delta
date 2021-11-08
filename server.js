@@ -46,11 +46,11 @@ createServer(async (req, res) => {
         req.on('end', () => {
             const data = JSON.parse(body);
             user_id = uuid();
-            update_user(database,data,user_id);
-             write(database);
-             res.writeHead(200);
-             res.write("User created");
-             res.end();
+            update_user(database, data, user_id);
+            write(database);
+            res.writeHead(200);
+            res.write("User created");
+            res.end();
         });
     }
     else if (parsed.pathname === '/login') {
@@ -82,14 +82,28 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/addProduct') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
             product_id = uuid();
-            update_product(database,data,product_id);
+            update_product(database, data, product_id);
             write(database);
-            res.writeHead(200);
-            res.write("Product added");
+            // res.writeHead(200);
+            // res.write("Product added");
+            for (let i of database.products) {
+                if (data.name === i.name) {
+                    prod = i;
+                    break;
+                }
+            }
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+            }
             res.end();
         });
     }
@@ -121,25 +135,67 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/upvote') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            update_vote(database, obj, true);
-            write(database);
-            res.writeHead(200);
-            res.write("Product upvoted");
+            for (let i of database.products) {
+                if (obj.name === i.name) {
+                    if (i.upVote) {
+                        i.upVote += 1;
+                    }
+                    else {
+                        i.upVote = 1;
+                    }
+                    prod = i;
+                    break;
+                }
+            }
+            writeFile("database.json", JSON.stringify(database), err => {
+                if (err) {
+                    console.err(err);
+                } else res.end();
+            });
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+            }
             res.end();
         });
     }
     else if (parsed.pathname === '/downvote') {
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            update_vote(database, obj, false);
-            write(database,obj,false);
-            res.writeHead(200);
-            res.write("Product downvoted");
+            for (let i of database.products) {
+                if (obj.name === i.name) {
+                    if (i.downVote) {
+                        i.downVote += 1;
+                    }
+                    else {
+                        i.downVote = 1;
+                    }
+                    prod = i;
+                    break;
+                }
+            }
+            writeFile("database.json", JSON.stringify(database), err => {
+                if (err) {
+                    console.err(err);
+                } else res.end();
+            });
+            if (prod !== undefined) {
+                res.writeHead(200);
+                res.write(JSON.stringify(prod));
+            }
+            else {
+                res.writeHead(404);
+            }
             res.end();
         });
     }
@@ -174,25 +230,25 @@ createServer(async (req, res) => {
         let file = 'client/' + page + ".html";
         sendFileContent(res, file, content);
     }
-    else {           
-        if(/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())){
+    else {
+        if (/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())) {
             sendFileContent(res, req.url.toString().substring(1), "text/css");
         }
-        else if(/^\/[a-zA-Z0-9\/]*.js$/.test(req.url.toString())){
+        else if (/^\/[a-zA-Z0-9\/]*.js$/.test(req.url.toString())) {
             sendFileContent(res, req.url.toString().substring(1), "text/javascript");
-         }
-         else if(/^\/[a-zA-Z0-9\-\.\_\/]*.jpg$/.test(req.url.toString())){
+        }
+        else if (/^\/[a-zA-Z0-9\-\.\_\/]*.jpg$/.test(req.url.toString())) {
             sendFileContent(res, req.url.toString().substring(1), "image/jpg");
-         }
-         else if(/^\/[a-zA-Z0-9\/]*.png$/.test(req.url.toString())){
+        }
+        else if (/^\/[a-zA-Z0-9\/]*.png$/.test(req.url.toString())) {
             sendFileContent(res, req.url.toString().substring(1), "image/png");
-         }
-         else {
+        }
+        else {
             res.writeHead(404);
             res.write('Page Not Found!');
             res.end();
-    
-         }
+
+        }
     }
 
 }).listen(port);
