@@ -94,12 +94,29 @@ createServer(async (req, res) => {
         });
     }
     else if (parsed.pathname === '/productInfo') {
+        // let body = '';
+        // let prod;
+        // req.on('data', data => body += data);
+        // req.on('end', () => {
+        //     let obj = JSON.parse(body);
+        //     prod = find(database, obj);
+        //     console.log(prod,"prod");
+        //     res.write("Product returned");
+        //     res.write(JSON.stringify(prod));
+        //     res.end();
+        // });
         let body = '';
+        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            res.write("Product returned");
-            res.write(JSON.stringify(find(database, obj)));
+            for (let i of database.products) {
+                if (obj.name === i.name) {
+                    prod = i;
+                    break;
+                }
+            }
+            res.write(JSON.stringify(prod));
             res.end();
         });
     }
@@ -192,7 +209,6 @@ createServer(async (req, res) => {
             res.end();
     
          }
-         
     }
 
 }).listen(port);
