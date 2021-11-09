@@ -130,15 +130,6 @@
             "id": "b55b917e-d85d-41f9-a26c-a64d136322dc",
             "upVote": 3,
             "downVote": 2
-        },
-        {
-            "name": "New York",
-            "category": "Travel",
-            "description": "City",
-            "details": "NYC",
-            "id": "c1c4ffd7-ee13-42e0-b67b-1fc61cc77c36",
-            "upVote": 0,
-            "downVote": 0
         }
     ],
     "pages": [
