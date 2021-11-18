@@ -4,11 +4,22 @@ import { parse } from 'url';
 import { readFile, writeFile, readFileSync, existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import { write, update_user, update_product, update_vote, find, remove } from './database.js';
+import pkg from 'pg';
 
 let database = {};
 let product_id;
 let user_id;
 let port = process.env.PORT || 8080;
+
+const { Pool } = pkg;
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+
 
 if (existsSync("database.json")) {
     database = JSON.parse(readFileSync("database.json"));
@@ -229,6 +240,19 @@ createServer(async (req, res) => {
         }
         let file = 'client/' + page + ".html";
         sendFileContent(res, file, content);
+    }
+    else if (parsed.pathname === '/db'){
+            try {
+              const client = await pool.connect();
+              const result = await client.query('SELECT * FROM products');
+              console.log("hi");
+              res.render('/db', result );
+              client.release();
+            } catch (err) {
+              console.error(err);
+              res.write("Error " + err);
+            }
+            res.end();
     }
     else {
         if (/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())) {
