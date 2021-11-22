@@ -25,6 +25,7 @@ export function update_product(db, info, num) {
         description: info.description,
         details: info.details,
         id: num,
+        image: info.image,
         upVote: 0,
         downVote: 0
     });

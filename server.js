@@ -1,15 +1,36 @@
 'use strict';
 import { createServer } from 'http';
 import { parse } from 'url';
-import { readFile, writeFile, readFileSync, existsSync } from 'fs';
+import { readFile, writeFile, readFileSync, existsSync, fstat } from 'fs';
 import { v4 as uuid } from 'uuid';
 import { write, update_user, update_product, update_vote, find, remove } from './database.js';
 import pkg from 'pg';
+import path from 'path';
 
 let database = {};
 let product_id;
 let user_id;
 let port = process.env.PORT || 8080;
+let session_id = 0x10000;
+let sessions = [];
+
+let secrets;
+let db_url;
+
+if (process.env.DATABASE_URL != null && process.env.DATABASE_URL != null) {
+    db_url = process.env.DATABASE_URL;
+}
+else {
+    if (existsSync("secrets.json")) {
+        secrets = JSON.parse(readFileSync("secrets.json"));
+         db_url = secrets.db_url;
+    }
+    else {
+        db_url = "";
+    }
+}
+
+// console.log(db_url);
 
 const { Pool } = pkg;
 const pool = new Pool({
@@ -48,6 +69,31 @@ function sendFileContent(response, fileName, contentType) {
     });
 }
 
+function saveImage(imageFile, image) {
+    let index = imageFile.lastIndexOf(".");
+    let extension = "";
+    let id = 0;
+    let file_name = "";
+    let file_path = "";
+    
+    if (index > 0) {
+        extension = imageFile.slice(index + 1);
+        file_name = imageFile.slice(0, index);
+        file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);
+        while (existsSync(file_path)) {
+            file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);        
+        }
+        // strip off the data: url prefix to get just the base64-encoded bytes
+        let data = image.replace(/^data:image\/\w+;base64,/, "");
+        let buf = Buffer.from(data, 'base64');
+        writeFile(file_path, buf, function(err) {
+            if (err) throw err;
+        });
+    }
+
+    return file_path;
+}
+
 createServer(async (req, res) => {
     const parsed = parse(req.url, true);
     if (parsed.pathname === '/createUser') {
@@ -55,18 +101,21 @@ createServer(async (req, res) => {
         let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
+            let param = {};
             const data = JSON.parse(body);
             user_id = uuid();
             update_user(database, data, user_id);
             write(database);
+            param['username'] = data.name;
             res.writeHead(200);
-            res.write("User created");
+            res.write(JSON.stringify(param));
             res.end();
         });
     }
     else if (parsed.pathname === '/login') {
         let body = '';
         let prod;
+        
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
@@ -81,7 +130,8 @@ createServer(async (req, res) => {
             if (prod !== undefined) {
                 let param = {};
                 param['username'] = prod.name;
-                res.writeHead(200);
+                sessions.push(session_id);
+                res.writeHead(200, {'Set-Cookie': 'session_id=' + (session_id++)});
                 res.write(JSON.stringify(param));
             }
             else {
@@ -91,13 +141,35 @@ createServer(async (req, res) => {
             res.end();
         });
     }
+    else if (parsed.pathname === '/logout') {
+        let body = '';
+        console.log("logout");
+        req.on('data', data => body += data);
+        req.on('end', () => {
+            res.end();
+        });
+    }
     else if (parsed.pathname === '/addProduct') {
         let body = '';
         let prod;
+        let image_path;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
             product_id = uuid();
+            if (data.image_file != null && data.image_file.length > 0) {
+                image_path = saveImage(data.image_file, data.image);
+                if (image_path != null) {
+                    data.image = image_path;
+                }
+                else {
+                    data.image = "";
+                }
+            }
+            else {
+                data.image = "";
+            }
+
             update_product(database, data, product_id);
             write(database);
             // res.writeHead(200);
@@ -264,8 +336,14 @@ createServer(async (req, res) => {
         else if (/^\/[a-zA-Z0-9\-\.\_\/]*.jpg$/.test(req.url.toString())) {
             sendFileContent(res, req.url.toString().substring(1), "image/jpg");
         }
-        else if (/^\/[a-zA-Z0-9\/]*.png$/.test(req.url.toString())) {
+        else if (/^\/[a-zA-Z0-9\-\.\_\/]*.png$/.test(req.url.toString())) {
             sendFileContent(res, req.url.toString().substring(1), "image/png");
+        }
+        else if (/^\/[a-zA-Z0-9\-\.\_\/]*.gif$/.test(req.url.toString())) {
+            sendFileContent(res, req.url.toString().substring(1), "image/gif");
+        }
+        else if (/^\/[a-zA-Z0-9\-\.\_\/]*.jpeg$/.test(req.url.toString())) {
+            sendFileContent(res, req.url.toString().substring(1), "image/jpeg");
         }
         else {
             res.writeHead(404);

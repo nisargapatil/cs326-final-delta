@@ -1,13 +1,26 @@
+let img_uploaded = "";
+let img_file = "";
+let login_user = "";
+
 function isLogin() {
     let isLogin = false;
     let myStorage = window.localStorage;
     if (myStorage !== undefined) {
         let user = myStorage.getItem('user');
-        if (user !== undefined) {
+        if (user !== undefined && user !== null) {
             isLogin = true;
         }
     }
     return isLogin;
+}
+
+function loginUser() {
+    let user = "";
+    let myStorage = window.localStorage;
+    if (myStorage !== undefined) {
+        user = myStorage.getItem('user');
+    }
+    return user;
 }
 
 async function getJSON(url, payload) {
@@ -61,6 +74,10 @@ async function addFoodProduct() {
         param['category'] = 'food';
         param['description'] = desc.value;
         param['details'] = detail.value;
+        if (img_uploaded != null && img_uploaded.length > 0) {
+            param['image'] = img_uploaded;
+            param['image_file'] = img_file;
+        }
         let res = await getJSON(url, param);
         let json = await res.text();
         let obj = JSON.parse(json);
@@ -94,12 +111,18 @@ async function createUser() {
             param['password'] = password.value;
             let res = await getJSON(url, param);
             let json = await res.text();
+            console.log(json);
             let obj = JSON.parse(json);
-            if (obj !== undefined && obj.name !== undefined) {
-               alert("User " + obj.name + " added sucessfully.")
-            }
+            if (obj !== undefined && obj['username'] !== undefined) {
+               let myStorage = window.localStorage;
+               if (myStorage !== undefined) {
+                   myStorage.setItem('user', obj['username']);
+               }
+               alert("User " + obj['username'] + " added sucessfully.")
+               window.location.replace("/viewPage?page=home");
+           }
             else {
-                alert("Error adding user " + name.value);
+                alert("Error adding user " + username.value);
             }
         }
     }
@@ -132,6 +155,11 @@ async function login() {
                 // Nothing to do
             }
             if (obj !== undefined && obj.username !== undefined) {
+                login_user = obj.username;
+                let myStorage = window.localStorage;
+                if (myStorage !== undefined) {
+                    myStorage.setItem('user', obj.username);
+                }
                 alert("User " + obj.username + " login sucessfully.")
                 window.location.replace("/viewPage?page=home");
             }
@@ -161,6 +189,10 @@ async function addTravelProduct() {
         param['category'] = 'Travel';
         param['description'] = desc.value;
         param['details'] = detail.value;
+        if (img_uploaded != null && img_uploaded.length > 0) {
+            param['image'] = img_uploaded;
+            param['image_file'] = img_file;
+        }
         let res = await getJSON(url, param);
         let json = await res.text();
         let obj = JSON.parse(json);
@@ -187,6 +219,10 @@ async function addEntertainmentProduct() {
         param['category'] = 'Entertainment';
         param['description'] = desc.value;
         param['details'] = detail.value;
+        if (img_uploaded != null && img_uploaded.length > 0) {
+            param['image'] = img_uploaded;
+            param['image_file'] = img_file;
+        }
         let res = await getJSON(url, param);
         let json = await res.text();
         let obj = JSON.parse(json);
@@ -197,6 +233,43 @@ async function addEntertainmentProduct() {
     else {
         alert('Invalid input');
     }
+}
+
+function process_home_page() {
+    let url = '/home';
+    let user_login = isLogin();
+
+    let html;
+    if (isLogin() === false) {
+        let create_btn = document.getElementById('create_id');
+        html = `<a href="viewPage?page=createAccount">
+        <button type="submit" class="btn btn-dark">Create Account</button>
+        </a>`;
+        create_btn.innerHTML = html;
+
+        let login_btn = document.getElementById('login_id');
+        html = `<a href="viewPage?page=login">
+        <button type="submit" class="btn btn-dark">Log In</button>
+        </a>`;
+        login_btn.innerHTML = html;
+    }
+    else {
+        let login_btn = document.getElementById('login_id');
+        let user = loginUser();
+        html = `<a href="javascript:logout()">
+        <button type="submit" class="btn btn-dark">${user} - logout</button>
+        </a>`;
+        login_btn.innerHTML = html;
+    }
+}
+
+function logout() {
+    let myStorage = window.localStorage;
+    if (myStorage !== undefined) {
+        console.log("Logout remove user");
+        myStorage.removeItem('user');
+    }
+    window.location.replace("/viewPage?page=home");
 }
 
 async function render() {
@@ -212,9 +285,6 @@ async function render() {
             page = window.location.href.substr(pageIndex + 5);
         }
 
-        if (isLogin() === false) {
-            alert('Login');
-        }
         if (page === 'foodRatePage') {
             let url = '/productSummary';
             let res = await getJSON(url, {category: 'food'});
@@ -223,9 +293,13 @@ async function render() {
             let container2 = document.getElementById('container2');
             let html = '';
             for (let i=0; i < obj.length; i++) {
+                let image = obj[i].image;
+                if (image === undefined || image === null  || image.length === 0) {
+                    image = "./imgs/foodPic.jpg";
+                }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
-                <img src="./imgs/foodPic.jpg" width="200" height="200"><br><br>
+                <img src="${image}" width="200" height="200"><br><br>
                 <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
                 <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=foodProductPage&name=${obj[i].name}">
@@ -254,9 +328,13 @@ async function render() {
                 let obj = JSON.parse(json);
                 let container2 = document.getElementById('container2');
                 let html = '';
+                let image = obj.image;
+                if (image === undefined || image === null  || image.length === 0) {
+                    image = "./imgs/foodPic.jpg";
+                }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
-                <img src="./imgs/foodPic.jpg" width="200" height="200"><br><br>
+                <img src="${image}" width="200" height="200"><br><br>
                 <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
                 <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
@@ -289,9 +367,13 @@ async function render() {
             let container2 = document.getElementById('container2');
             let html = '';
             for (let i=0; i < obj.length; i++) {
+                let image = obj[i].image;
+                if (image === undefined || image === null  || image.length === 0) {
+                    image = "./imgs/travelPic.jpg";
+                }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
-                <img src="./imgs/travelPic.jpg" width="200" height="200"><br><br>
+                <img src="${image}" width="200" height="200"><br><br>
                 <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
                 <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=travelProductPage&name=${obj[i].name}">
@@ -318,11 +400,15 @@ async function render() {
                 let res = await getJSON(url, param);
                 let json = await res.text();
                 let obj = JSON.parse(json);
+                let image = obj.image;
+                if (image === undefined || image === null  || image.length === 0) {
+                    image = "./imgs/travelPic.jpg";
+                }
                 let container2 = document.getElementById('container2');
                 let html = '';
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
-                <img src="./imgs/travelPic.jpg" width="200" height="200"><br><br>
+                <img src="${image}" width="200" height="200"><br><br>
                 <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
                 <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
@@ -355,9 +441,13 @@ async function render() {
             let container2 = document.getElementById('container2');
             let html = '';
             for (let i=0; i < obj.length; i++) {
+                let image = obj[i].image;
+                if (image === undefined || image === null || image.length === 0) {
+                    image = "./imgs/movie.jpg";
+                }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
-                <img src="./imgs/movie.jpg" width="200" height="200"><br><br>
+                <img src="${image}" width="200" height="200"><br><br>
                 <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
                 <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=entertainmentProductPage&name=${obj[i].name}">
@@ -384,11 +474,15 @@ async function render() {
                 let res = await getJSON(url, param);
                 let json = await res.text();
                 let obj = JSON.parse(json);
+                let image = obj.image;
+                if (image === undefined || image === null  || image.length === 0) {
+                    image = "./imgs/movie.jpg";
+                }
                 let container2 = document.getElementById('container2');
                 let html = '';
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
-                <img src="./imgs/movie.jpg" width="200" height="200"><br><br>
+                <img src="${image}" width="200" height="200"><br><br>
                 <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
                 <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
@@ -420,7 +514,7 @@ async function render() {
             <form>
                 <br>
                 <label>Upload a picture</label>
-                <input type="file" id="img" name="img" accept="image/*">
+                <input type="file" id="food_img" name="food_img" accept="image/*">
                 <br>
                 <input type="text" class="input-field" placeholder="Name" id="product_name">
                 <input type="text" class="input-field" placeholder="Description" id="product_desc">
@@ -431,6 +525,17 @@ async function render() {
             let container = document.getElementById('container');
             container.innerHTML = html;
             document.getElementById("addFood_button").addEventListener('click', function() {addFoodProduct()});
+            let food_img = document.querySelector("#food_img");
+            img_uploaded = "";
+            img_file = "";
+            food_img.addEventListener("change", function(){
+                let reader = new FileReader();
+                reader.addEventListener("load", ()=> {
+                    img_uploaded = reader.result;
+                })
+                reader.readAsDataURL(this.files[0]);
+                img_file = this.files[0].name;
+            });
         }
         else if (page === 'travelCreatePoll') {
             let url = '/addProduct';
@@ -439,7 +544,7 @@ async function render() {
             <form>
                 <br>
                 <label>Upload a picture</label>
-                <input type="file" id="img" name="img" accept="image/*">
+                <input type="file" id="travel_img" name="travel_img" accept="image/*">
                 <br>
                 <input type="text" class="input-field" placeholder="Name" id="product_name">
                 <input type="text" class="input-field" placeholder="Description" id="product_desc">
@@ -450,6 +555,17 @@ async function render() {
             let container = document.getElementById('container');
             container.innerHTML = html;
             document.getElementById("addTravel_button").addEventListener('click', function() {addTravelProduct()});
+            let travel_img = document.querySelector("#travel_img");
+            img_uploaded = "";
+            img_file = "";
+            travel_img.addEventListener("change", function(){
+                let reader = new FileReader();
+                reader.addEventListener("load", ()=> {
+                    img_uploaded = reader.result;
+                })
+                reader.readAsDataURL(this.files[0]);
+                img_file = this.files[0].name;
+            });
         }
         else if (page === 'entertainmentCreatePoll') {
             let url = '/addProduct';
@@ -458,7 +574,7 @@ async function render() {
             <form>
                 <br>
                 <label>Upload a picture</label>
-                <input type="file" id="img" name="img" accept="image/*">
+                <input type="file" id="entertainment_img" name="entertainment_img" accept="image/*">
                 <br>
                 <input type="text" class="input-field" placeholder="Name" id="product_name">
                 <input type="text" class="input-field" placeholder="Description" id="product_desc">
@@ -469,6 +585,17 @@ async function render() {
             let container = document.getElementById('container');
             container.innerHTML = html;
             document.getElementById("addEntertainment_button").addEventListener('click', function() {addEntertainmentProduct()});
+            let entertainment_img = document.querySelector("#entertainment_img");
+            img_uploaded = "";
+            img_file = "";
+            entertainment_img.addEventListener("change", function(){
+                let reader = new FileReader();
+                reader.addEventListener("load", ()=> {
+                    img_uploaded = reader.result;
+                })
+                reader.readAsDataURL(this.files[0]);
+                img_file = this.files[0].name;
+            });
         }
         else if (page === 'createAccount') {
             let url = '/createUser';
@@ -499,6 +626,12 @@ async function render() {
             container.innerHTML = html;
             document.getElementById("login_button").addEventListener('click', function() {login()});
         }        
+        else if (page === 'home') {
+            process_home_page();
+        }        
+    }
+    else {
+        process_home_page();
     }
 }
 
