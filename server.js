@@ -17,7 +17,7 @@ let sessions = [];
 let secrets;
 let db_url;
 
-if (process.env.DATABASE_URL != null && process.env.DATABASE_URL != null) {
+if (process.env.DATABASE_URL != null) {
     db_url = process.env.DATABASE_URL;
 }
 else {
@@ -30,7 +30,6 @@ else {
     }
 }
 
-// console.log(db_url);
 
 const { Pool } = pkg;
 const pool = new Pool({
