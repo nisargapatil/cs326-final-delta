@@ -8,7 +8,7 @@
         Products table contains the product id, name, its category(eitehr food,travel, or entertainment), description, and the no. of upvotes/downvotes it gets.
     
         Users table contains the name, password, email, and user id of all the users who log into our application.
-        
+
         Example tables:
 
         Products:
@@ -24,7 +24,6 @@
         ---------+----------+-------------------+-------------------------------------
          Nisarga | cs326    | nisarga@gmail.com | rwe2f90-f25b-4a2b-b261-03057292938b
 */
-
 
 
 'use strict';
