@@ -1,5 +1,7 @@
 
-For our database management system, We are using Heroku Postgres. Our application is deployed on heroku on this link:
+For our database management system, We are using Heroku Postgres. 
+
+Our application is deployed on heroku on this link: https://wevote326.herokuapp.com
 
 Here's the description of our database:
 
