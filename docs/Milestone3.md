@@ -35,4 +35,5 @@ Here's the description of our database:
 Contributions:
 
 1. Nisarga : Set up the heroku postgres database, added dbms logic, created milestone3.md
+2. Yiming: Helped with backend implementation.
 
