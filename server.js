@@ -46,7 +46,7 @@ const client = new Client({
 });
 
 
-const db = pgp()(db_url);
+const db = pgp(client.connectionString);
 
 async function connectAndRun(task) {
     let connection = null;
