@@ -31,3 +31,8 @@ Here's the description of our database:
         ---------+----------+-------------------+-------------------------------------
          Nisarga | cs326    | nisarga@gmail.com | rwe2f90-f25b-4a2b-b261-03057292938b
 
+
+Contributions:
+
+1. Nisarga : Set up the heroku postgres database, added dbms logic, created milestone3.md
+
