@@ -4,8 +4,9 @@ import { parse } from 'url';
 import { readFile, writeFile, readFileSync, existsSync, fstat } from 'fs';
 import { v4 as uuid } from 'uuid';
 import { write, update_user, update_product, update_vote, find, remove } from './database.js';
-import pkg from 'pg';
 import path from 'path';
+import pg from 'pg';
+import pgp from 'pg-promise';
 
 let database = {};
 let product_id;
@@ -16,28 +17,75 @@ let sessions = [];
 
 let secrets;
 let db_url;
+let user;
+let password;
 
-if (process.env.DATABASE_URL != null) {
-    db_url = process.env.DATABASE_URL;
-}
-else {
-    if (existsSync("secrets.json")) {
-        secrets = JSON.parse(readFileSync("secrets.json"));
-         db_url = secrets.db_url;
-    }
-    else {
-        db_url = "";
-    }
+
+if (existsSync("secret.json")) {
+    secrets = JSON.parse(readFileSync("secret.json"));
+    db_url = secrets.db_url;
+    user = secrets.user;
+    password = secrets.password;
 }
 
 
-const { Pool } = pkg;
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+const { Client } = pg;
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL || db_url,
+    ssl: {
+        rejectUnauthorized: false
+    },
+    databaseConfig: {
+        "host": "ec2-34-197-181-65.compute-1.amazonaws.com",
+        "port": 5432,
+        "database": "d4fiuuqkihla1",
+        "user": user,
+        "password": password
+    }
 });
+
+
+const db = pgp()(db_url);
+
+async function connectAndRun(task) {
+    let connection = null;
+
+    try {
+        connection = await db.connect();
+        return await task(connection);
+    }
+    catch (e) {
+        throw e;
+    }
+    finally {
+        try {
+            connection.done();
+        }
+        catch (ignored) {
+        }
+    }
+}
+
+async function addProduct(id, name, category, description, upvote, downvote) {
+    return await connectAndRun(db => db.none('INSERT INTO products (id, name, category, description, upvote, downvote) VALUES ($1, $2, $3,$4,$5,$6);', [id, name, category, description, upvote, downvote]));
+}
+
+async function addUser(name, password, email, id) {
+    return await connectAndRun(db => db.none('INSERT INTO users (name, password, email, id) VALUES ($1, $2, $3, $4);', [name, password, email, id]));
+}
+
+async function upVote(name) {
+    return await connectAndRun(db => db.any('UPDATE products SET upvote = upvote+1 where name = ($1);',[name]));
+}
+
+async function downVote(name) {
+    return await connectAndRun(db => db.any('UPDATE products SET downvote = downvote-1 where name = ($1);',[name]));
+}
+
+async function productInfo(name) {
+    return await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));
+}
 
 
 
@@ -74,18 +122,18 @@ function saveImage(imageFile, image) {
     let id = 0;
     let file_name = "";
     let file_path = "";
-    
+
     if (index > 0) {
         extension = imageFile.slice(index + 1);
         file_name = imageFile.slice(0, index);
         file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);
         while (existsSync(file_path)) {
-            file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);        
+            file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);
         }
         // strip off the data: url prefix to get just the base64-encoded bytes
         let data = image.replace(/^data:image\/\w+;base64,/, "");
         let buf = Buffer.from(data, 'base64');
-        writeFile(file_path, buf, function(err) {
+        writeFile(file_path, buf, function (err) {
             if (err) throw err;
         });
     }
@@ -114,7 +162,7 @@ createServer(async (req, res) => {
     else if (parsed.pathname === '/login') {
         let body = '';
         let prod;
-        
+
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
@@ -130,7 +178,7 @@ createServer(async (req, res) => {
                 let param = {};
                 param['username'] = prod.name;
                 sessions.push(session_id);
-                res.writeHead(200, {'Set-Cookie': 'session_id=' + (session_id++)});
+                res.writeHead(200, { 'Set-Cookie': 'session_id=' + (session_id++) });
                 res.write(JSON.stringify(param));
             }
             else {
@@ -312,18 +360,18 @@ createServer(async (req, res) => {
         let file = 'client/' + page + ".html";
         sendFileContent(res, file, content);
     }
-    else if (parsed.pathname === '/db'){
-            try {
-              const client = await pool.connect();
-              const result = await client.query('SELECT * FROM products');
-              console.log("hi");
-              res.render('/db', result );
-              client.release();
-            } catch (err) {
-              console.error(err);
-              res.write("Error " + err);
-            }
-            res.end();
+    else if (parsed.pathname === '/db') {
+        try {
+            const client = await pool.connect();
+            const result = await client.query('SELECT * FROM products');
+            console.log("hi");
+            res.render('/db', result);
+            client.release();
+        } catch (err) {
+            console.error(err);
+            res.write("Error " + err);
+        }
+        res.end();
     }
     else {
         if (/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())) {
