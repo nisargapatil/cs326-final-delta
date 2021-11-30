@@ -36,4 +36,5 @@ Contributions:
 
 1. Nisarga : Set up the heroku postgres database, added dbms logic, created milestone3.md
 2. Yiming: Helped with backend implementation.
+3. Elizabeth: set up the image functionality, created a functioning login page, postgres database, secrets.json
 
