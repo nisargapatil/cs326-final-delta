@@ -5,48 +5,19 @@ import { readFile, writeFile, readFileSync, existsSync, fstat } from 'fs';
 import { v4 as uuid } from 'uuid';
 import { write, update_user, update_product, update_vote, find, remove } from './database.js';
 import path from 'path';
-import pg from 'pg';
 import pgp from 'pg-promise';
 
-let database = {};
 let product_id;
 let user_id;
 let port = process.env.PORT || 8080;
 let session_id = 0x10000;
 let sessions = [];
+let secrets = JSON.parse(readFileSync("secret.json"));
+let user = secrets.user;
+let password = secrets.password;
+let db_url = process.env.DATABASE_URL || `postgres://${user}:${password}@localhost/`;
 
-let secrets;
-let db_url;
-let user;
-let password;
-
-
-if (existsSync("secret.json")) {
-    secrets = JSON.parse(readFileSync("secret.json"));
-    db_url = secrets.db_url;
-    user = secrets.user;
-    password = secrets.password;
-}
-
-
-const { Client } = pg;
-
-const client = new Client({
-    connectionString: process.env.DATABASE_URL || db_url,
-    ssl: {
-        rejectUnauthorized: false
-    },
-    databaseConfig: {
-        "host": "ec2-34-197-181-65.compute-1.amazonaws.com",
-        "port": 5432,
-        "database": "d4fiuuqkihla1",
-        "user": user,
-        "password": password
-    }
-});
-
-
-const db = pgp(client.connectionString);
+const db = pgp()(db_url);
 
 async function connectAndRun(task) {
     let connection = null;
@@ -68,37 +39,34 @@ async function connectAndRun(task) {
 }
 
 async function addProduct(id, name, category, description, upvote, downvote) {
-    return await connectAndRun(db => db.none('INSERT INTO products (id, name, category, description, upvote, downvote) VALUES ($1, $2, $3,$4,$5,$6);', [id, name, category, description, upvote, downvote]));
+    return await connectAndRun(db => db.none('INSERT INTO products VALUES ($1, $2, $3,$4,$5,$6);', [id, name, category, description, upvote, downvote]));
 }
 
-async function addUser(name, password, email, id) {
-    return await connectAndRun(db => db.none('INSERT INTO users (name, password, email, id) VALUES ($1, $2, $3, $4);', [name, password, email, id]));
+async function deleteProduct(name) {
+    return await connectAndRun(db => db.result('DELETE FROM products WHERE name = ($1);', [name]));
+}
+
+async function addUser(name, pw, email, id) {
+    return await connectAndRun(db => db.none('INSERT INTO users VALUES ($1, $2, $3, $4);', [name, pw, email, id]));
 }
 
 async function upVote(name) {
-    return await connectAndRun(db => db.any('UPDATE products SET upvote = upvote+1 where name = ($1);',[name]));
+    return await connectAndRun(db => db.any('UPDATE products SET upvote = upvote+1 where name = ($1);', [name]));
 }
 
 async function downVote(name) {
-    return await connectAndRun(db => db.any('UPDATE products SET downvote = downvote-1 where name = ($1);',[name]));
+    return await connectAndRun(db => db.any('UPDATE products SET downvote = downvote-1 where name = ($1);', [name]));
 }
 
-async function productInfo(name) {
+async function findProduct(name) {
     return await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));
 }
 
-
-
-if (existsSync("database.json")) {
-    database = JSON.parse(readFileSync("database.json"));
-} else {
-    database = {
-        users: [],
-        products: [],
-        pages: ['food', 'travel', 'entertainment'],
-        viewed: []
-    };
+async function findUser(name) {
+    return await connectAndRun(db => db.none('SELECT * FROM users WHERE name = ($1);', [name]));
 }
+
+
 
 function sendFileContent(response, fileName, contentType) {
 
@@ -145,14 +113,12 @@ createServer(async (req, res) => {
     const parsed = parse(req.url, true);
     if (parsed.pathname === '/createUser') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
-        req.on('end', () => {
+        req.on('end', async () => {
             let param = {};
             const data = JSON.parse(body);
             user_id = uuid();
-            update_user(database, data, user_id);
-            write(database);
+            addUser(data.name, data.password, data.email, user_id);
             param['username'] = data.name;
             res.writeHead(200);
             res.write(JSON.stringify(param));
@@ -161,20 +127,11 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/login') {
         let body = '';
-        let prod;
-
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
-            let prod;
-            for (let i of database.users) {
-                if (data.username === i.name &&
-                    data.password === i.password) {
-                    prod = i;
-                    break;
-                }
-            }
-            if (prod !== undefined) {
+            let u = findUser(data.name);
+            if (u !== null && u.password === data.password) {
                 let param = {};
                 param['username'] = prod.name;
                 sessions.push(session_id);
@@ -183,7 +140,7 @@ createServer(async (req, res) => {
             }
             else {
                 res.writeHead(404);
-                res.write('Error creating user ' + data.username);
+                res.write('Error logging in as user ' + data.name);
             }
             res.end();
         });
@@ -204,7 +161,7 @@ createServer(async (req, res) => {
         req.on('end', () => {
             const data = JSON.parse(body);
             product_id = uuid();
-            if (data.image_file != null && data.image_file.length > 0) {
+            if (data.image_file != null) {
                 image_path = saveImage(data.image_file, data.image);
                 if (image_path != null) {
                     data.image = image_path;
@@ -217,16 +174,8 @@ createServer(async (req, res) => {
                 data.image = "";
             }
 
-            update_product(database, data, product_id);
-            write(database);
-            // res.writeHead(200);
-            // res.write("Product added");
-            for (let i of database.products) {
-                if (data.name === i.name) {
-                    prod = i;
-                    break;
-                }
-            }
+            addProduct(product_id, data.name, data.category, data.description, 0, 0);
+            let prod = JSON.parse(findProduct(data.name));
             if (prod !== undefined) {
                 res.writeHead(200);
                 res.write(JSON.stringify(prod));
@@ -243,7 +192,7 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            prod = find(database, obj);
+            prod = JSON.parse(findProduct(obj.name));
             res.write(JSON.stringify(prod));
             res.end();
         });
@@ -265,27 +214,11 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/upvote') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for (let i of database.products) {
-                if (obj.name === i.name) {
-                    if (i.upVote) {
-                        i.upVote += 1;
-                    }
-                    else {
-                        i.upVote = 1;
-                    }
-                    prod = i;
-                    break;
-                }
-            }
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
+            let prod = JSON.parse(findProduct(obj.name));
+            upVote(obj.name);
             if (prod !== undefined) {
                 res.writeHead(200);
                 res.write(JSON.stringify(prod));
@@ -302,23 +235,8 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for (let i of database.products) {
-                if (obj.name === i.name) {
-                    if (i.downVote) {
-                        i.downVote += 1;
-                    }
-                    else {
-                        i.downVote = 1;
-                    }
-                    prod = i;
-                    break;
-                }
-            }
-            writeFile("database.json", JSON.stringify(database), err => {
-                if (err) {
-                    console.err(err);
-                } else res.end();
-            });
+            downVote(obj.name);
+            let prod = JSON.parse(findProduct(obj.name));
             if (prod !== undefined) {
                 res.writeHead(200);
                 res.write(JSON.stringify(prod));
@@ -334,9 +252,7 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             const obj = JSON.parse(body);
-            let prod = remove(database, obj);
-            database.products = prod;
-            write(database);
+            deleteProduct(obj.name);
             res.writeHead(200);
             res.write("Product deleted");
             res.end();
@@ -359,19 +275,6 @@ createServer(async (req, res) => {
         }
         let file = 'client/' + page + ".html";
         sendFileContent(res, file, content);
-    }
-    else if (parsed.pathname === '/db') {
-        try {
-            const client = await pool.connect();
-            const result = await client.query('SELECT * FROM products');
-            console.log("hi");
-            res.render('/db', result);
-            client.release();
-        } catch (err) {
-            console.error(err);
-            res.write("Error " + err);
-        }
-        res.end();
     }
     else {
         if (/^\/[a-zA-Z0-9\/]*.css$/.test(req.url.toString())) {
@@ -399,6 +302,5 @@ createServer(async (req, res) => {
 
         }
     }
-
 }).listen(port);
 
