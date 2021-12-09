@@ -59,7 +59,7 @@ function addProductCallback(res, name) {
     res.end();
 }
 
-async function addProduct(id, name, category, description, image, upvote, downvote) {
+async function addProduct(res, id, name, category, description, image_file, image, upvote, downvote) {
     try {
         const db_result = db.none('insert into products (id, name, category, description, image, upvote, downvote) values ($1, $2, $3, $4, $5, $6, $7)',
             [id, name, category, description, image, upvote, downvote])
@@ -360,6 +360,8 @@ createServer(async (req, res) => {
     else if (parsed.pathname === '/addProduct') {
         let body = '';
         let image;
+        let image_file;
+
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
@@ -368,13 +370,15 @@ createServer(async (req, res) => {
                 image = saveImage(data.image_file, data.image);
                 if (image === null) {
                     image = "";
+                    image_file = "";
                 }
             }
             else {
                 image = "";
+                image_file = "";
             }
 
-            addProduct(product_id, data.name, data.category, data.description, image, 0, 0);
+            addProduct(res, product_id, data.name, data.category, data.description, image_file, image, 0, 0);
         });
     }
     else if (parsed.pathname === '/productInfo') {
