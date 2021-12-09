@@ -3,7 +3,6 @@ import { createServer } from 'http';
 import { parse } from 'url';
 import { readFile, writeFile, readFileSync, existsSync, fstat } from 'fs';
 import { v4 as uuid } from 'uuid';
-import { write, update_user, update_product, update_vote, find, remove } from './database.js';
 import path from 'path';
 import pgp from 'pg-promise';
 
@@ -14,11 +13,13 @@ let session_id = 0x10000;
 let sessions = [];
 let user = '';
 let password = '';
+
 if (existsSync('secret.json')) {
     secrets = JSON.parse(readFileSync("/app/secret.json"));
     user = secrets.user;
     password = secrets.password;
 }
+
 let db_url = process.env.DATABASE_URL || `postgres://${user}:${password}@localhost/`;
 
 let ssl = {rejectUnauthorized: false}

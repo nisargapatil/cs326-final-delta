@@ -353,7 +353,7 @@ async function render() {
                 html += htmlSegment;
 
                 htmlSegment = `<div class="itemCard">
-                                <h3>Other Details</h3>
+                                <h3>Reviews</h3>
                         <span id="otherDetails"></span>
                         </div>`;
 
@@ -419,7 +419,7 @@ async function render() {
                 html += htmlSegment;
 
                 htmlSegment = `<div class="itemCard">
-                    <h3>Food Description</h3>
+                    <h3>Description</h3>
                     <span id="productDescription"></span>
                     ${obj.description}
                 </div>`;
@@ -427,7 +427,7 @@ async function render() {
                 html += htmlSegment;
 
                 htmlSegment = `<div class="itemCard">
-                                <h3>Other Details</h3>
+                                <h3>Reviews</h3>
                         <span id="otherDetails"></span>
                         </div>`;
 
@@ -493,7 +493,7 @@ async function render() {
                 html += htmlSegment;
 
                 htmlSegment = `<div class="itemCard">
-                    <h3>Food Description</h3>
+                    <h3>Description</h3>
                     <span id="productDescription"></span>
                     ${obj.description}
                 </div>`;
@@ -501,7 +501,7 @@ async function render() {
                 html += htmlSegment;
 
                 htmlSegment = `<div class="itemCard">
-                                <h3>Other Details</h3>
+                                <h3>Reviews</h3>
                         <span id="otherDetails"></span>
                         </div>`;
 
@@ -521,7 +521,6 @@ async function render() {
                 <br>
                 <input type="text" class="input-field" placeholder="Name" id="product_name">
                 <input type="text" class="input-field" placeholder="Description" id="product_desc">
-                <input type="text" class="input-field" placeholder="Other Details" id="product_detail">
                 <br>
                 <button type="button" class="btn" id="addFood_button">Create Poll</button>
             </form>`;
@@ -551,7 +550,6 @@ async function render() {
                 <br>
                 <input type="text" class="input-field" placeholder="Name" id="product_name">
                 <input type="text" class="input-field" placeholder="Description" id="product_desc">
-                <input type="text" class="input-field" placeholder="Other Details" id="product_detail">
                 <br>
                 <button type="button" class="btn" id="addTravel_button">Create Poll</button>
             </form>`;
@@ -581,7 +579,6 @@ async function render() {
                 <br>
                 <input type="text" class="input-field" placeholder="Name" id="product_name">
                 <input type="text" class="input-field" placeholder="Description" id="product_desc">
-                <input type="text" class="input-field" placeholder="Other Details" id="product_detail">
                 <br>
                 <button type="button" class="btn" id="addEntertainment_button">Create Poll</button>
             </form>`;
@@ -637,5 +634,4 @@ async function render() {
         process_home_page();
     }
 }
-
 render();
