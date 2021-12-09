@@ -268,7 +268,7 @@ function productInfoCallback(res, result, name) {
         res.write(JSON.stringify(result[0]));
     }
     else {
-        response.writeHead(404);
+        res.writeHead(404);
     }
     res.end();
 }
