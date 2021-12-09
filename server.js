@@ -9,13 +9,32 @@ import pgp from 'pg-promise';
 
 let product_id;
 let user_id;
+let secrets;
 let port = process.env.PORT || 8080;
 let session_id = 0x10000;
 let sessions = [];
-let secrets = JSON.parse(readFileSync("secret.json"));
-let user = secrets.user;
-let password = secrets.password;
-let db_url = process.env.DATABASE_URL || `postgres://${user}:${password}@localhost/`;
+let user;
+let password;
+let db_url;
+
+if (!process.env.PASSWORD) {
+    secrets = JSON.parse(readFileSync('secret.json'));
+    password = secrets.password;
+} else {
+    password = process.env.PASSWORD;
+}
+if (!process.env.USER) {
+    secrets = JSON.parse(readFileSync('secret.json'));
+    user = secrets.user;
+} else {
+    user = process.env.USER;
+}
+if (!process.env.DATABASE_URL) {
+    db_url = `postgres://${user}:${password}@localhost/`;
+}
+else {
+    db_url = process.env.DATABASE_URL;
+}
 
 const db = pgp()(db_url);
 
@@ -39,31 +58,31 @@ async function connectAndRun(task) {
 }
 
 async function addProduct(id, name, category, description, upvote, downvote) {
-    return await connectAndRun(db => db.none('INSERT INTO products VALUES ($1, $2, $3,$4,$5,$6);', [id, name, category, description, upvote, downvote]));
+    await connectAndRun(db => db.none('INSERT INTO products VALUES ($1, $2, $3,$4,$5,$6);', [id, name, category, description, upvote, downvote]));
 }
 
 async function deleteProduct(name) {
-    return await connectAndRun(db => db.result('DELETE FROM products WHERE name = ($1);', [name]));
+    await connectAndRun(db => db.result('DELETE FROM products WHERE name = ($1);', [name]));
 }
 
 async function addUser(name, pw, email, id) {
-    return await connectAndRun(db => db.none('INSERT INTO users VALUES ($1, $2, $3, $4);', [name, pw, email, id]));
+    await connectAndRun(db => db.none('INSERT INTO users VALUES ($1, $2, $3, $4);', [name, pw, email, id]));
 }
 
 async function upVote(name) {
-    return await connectAndRun(db => db.any('UPDATE products SET upvote = upvote+1 where name = ($1);', [name]));
+    await connectAndRun(db => db.any('UPDATE products SET upvote = upvote+1 where name = ($1);', [name]));
 }
 
 async function downVote(name) {
-    return await connectAndRun(db => db.any('UPDATE products SET downvote = downvote-1 where name = ($1);', [name]));
+    await connectAndRun(db => db.any('UPDATE products SET downvote = downvote-1 where name = ($1);', [name]));
 }
 
 async function findProduct(name) {
-    return await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));
+    await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));
 }
 
 async function findUser(name) {
-    return await connectAndRun(db => db.none('SELECT * FROM users WHERE name = ($1);', [name]));
+    await connectAndRun(db => db.none('SELECT * FROM users WHERE name = ($1);', [name]));
 }
 
 
@@ -119,9 +138,7 @@ createServer(async (req, res) => {
             const data = JSON.parse(body);
             user_id = uuid();
             addUser(data.name, data.password, data.email, user_id);
-            param['username'] = data.name;
             res.writeHead(200);
-            res.write(JSON.stringify(param));
             res.end();
         });
     }
@@ -136,7 +153,6 @@ createServer(async (req, res) => {
                 param['username'] = prod.name;
                 sessions.push(session_id);
                 res.writeHead(200, { 'Set-Cookie': 'session_id=' + (session_id++) });
-                res.write(JSON.stringify(param));
             }
             else {
                 res.writeHead(404);

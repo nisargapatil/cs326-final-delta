@@ -12,7 +12,7 @@ Here's the description of our database:
 
         Users (name text, password varchar(50), email text, id varchar(50));
 
-        Products table contains the product id, name, its category(eitehr food,travel, or entertainment), description, and the no. of upvotes/downvotes it gets.
+        Products table contains the product id, name, its category(either food,travel, or entertainment), description, and the no. of upvotes/downvotes it gets.
     
         Users table contains the name, password, email, and user id of all the users who log into our application.
         
