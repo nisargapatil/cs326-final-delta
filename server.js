@@ -29,6 +29,7 @@ let postgresConfig = {
     max: 30,
     ssl: ssl
 }
+
 const db = pgp()(postgresConfig);
 
 async function connectAndRun(task) {
@@ -58,15 +59,15 @@ function addProductCallback(res, name) {
     res.end();
 }
 
-async function addProduct(res, id, name, category, description, image_file, image, upvote, downvote) {
+async function addProduct(id, name, category, description, image, upvote, downvote) {
     try {
         const db_result = db.none('insert into products (id, name, category, description, image, upvote, downvote) values ($1, $2, $3, $4, $5, $6, $7)',
-            [id, name, category, description,  image, upvote, downvote])
+            [id, name, category, description, image, upvote, downvote])
             .then(function(result) {
                 addProductCallback(res, name);
             })
             .catch(function(error) {
-                console.log("addProduct error " + error.message);
+                console.log("Error while adding product" + error.message);
             });
     }
     catch (e) {
@@ -238,9 +239,9 @@ async function findUser(res, user, password) {
 
 function productSummaryCallback(res, result, category) {
     let prod = [];
-    for (let i=0; i <result.length; i++) {
-        if (category === result[i].category) {
-            prod.push(result[i]);
+    for (let i of result) {
+        if (category === i.category) {
+            prod.push(i);
         }
     }
     res.write(JSON.stringify(prod));
@@ -258,7 +259,7 @@ async function productSummary(res, category) {
             });
     }
     catch (e) {
-        console.log("Failed to select products category");
+        console.log("Failed to select product category");
     }
 }
 
@@ -274,7 +275,7 @@ function productInfoCallback(res, result, name) {
 
 async function productInfo(res, name) {
     try {
-        const db_result = db.any('select * from products where name = ($1) limit 1', [name])
+        const db_result = db.any('select * from products where name = ($1)', [name])
             .then(function(result) {
                 productInfoCallback(res, result, name);
             })
@@ -283,7 +284,7 @@ async function productInfo(res, name) {
             });
     }
     catch (e) {
-        console.log("Failed to select products info");
+        console.log("Failed to find product info");
     }
 }
 
@@ -358,9 +359,7 @@ createServer(async (req, res) => {
     }
     else if (parsed.pathname === '/addProduct') {
         let body = '';
-        let prod;
         let image;
-        let image_file;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
@@ -370,19 +369,16 @@ createServer(async (req, res) => {
                 if (image === null) {
                     image = "";
                 }
-                image_file = "";
             }
             else {
                 image = "";
-                image_file = "";
             }
 
-            addProduct(res, product_id, data.name, data.category, data.description, image_file, image, 0, 0);
+            addProduct(product_id, data.name, data.category, data.description, image, 0, 0);
         });
     }
     else if (parsed.pathname === '/productInfo') {
         let body = '';
-        let prod;
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
@@ -466,7 +462,6 @@ createServer(async (req, res) => {
             res.writeHead(404);
             res.write('Page Not Found!');
             res.end();
-
         }
     }
 }).listen(port);

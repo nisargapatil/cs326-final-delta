@@ -60,34 +60,6 @@ async function downVote(name) {
     document.getElementById(name + "_downButton").innerHTML = 'Downvote (' + obj.downvote + ')';
 }
 
-async function addFoodProduct() {
-    let url = '/addProduct';
-    let name = document.getElementById('product_name');
-    let desc = document.getElementById('product_desc');
-
-    if (name !== undefined && name.value.length > 0 &&
-        desc !== undefined && desc.value.length > 0 ) {
-        let param = {};
-        param['name'] = name.value;
-        param['category'] = 'food';
-        param['description'] = desc.value;
-        if (img_uploaded != null && img_uploaded.length > 0) {
-            param['image'] = img_uploaded;
-            param['image_file'] = img_file;
-        }
-        let res = await getJSON(url, param);
-        let json = await res.text();
-        let obj = JSON.parse(json);
-       if (obj !== undefined && obj.name !== undefined) {
-           alert("Food " + obj.name + " added sucessfully.")
-           window.location.replace("/viewPage?page=foodRatePage");
-       }
-    }
-    else {
-        alert('Invalid input');
-    }
-}
-
 async function createUser() {
     let url = '/createUser';
     let name = document.getElementById('name');
@@ -142,37 +114,58 @@ async function login() {
         let res = await getJSON(url, param);
         let json = await res.text();
         if (json !== undefined) {
-            let obj;
-            try {
-                obj = JSON.parse(json);
-            }
-            catch (ex) {
-                // Nothing to do
-            }
-            finally {
-                // Nothing to do
-            }
+            let obj = JSON.parse(json);
             if (obj !== undefined && obj.username !== undefined) {
                 login_user = obj.username;
                 let myStorage = window.localStorage;
                 if (myStorage !== undefined) {
                     myStorage.setItem('user', obj.username);
                 }
-                alert("User " + obj.username + " login sucessfully.")
+                alert("User " + obj.username + " logged in sucessfully.")
                 window.location.replace("/viewPage?page=home");
             }
             else {
-                alert("Error login as user " + username.value);
+                alert("Error logging in as user " + username.value);
             }
         }
         else {
-            alert("Error login as user " + username.value);
+            alert("Error logging in as user " + username.value);
         }
+    }
+    else {
+        alert('Invalid input, username and password cannot be empty');
+    }
+}
+
+async function addFoodProduct() {
+    let url = '/addProduct';
+    let name = document.getElementById('product_name');
+    let desc = document.getElementById('product_desc');
+
+    if (name !== undefined && name.value.length > 0 &&
+        desc !== undefined && desc.value.length > 0 ) {
+        let param = {};
+        param['name'] = name.value;
+        param['category'] = 'Food';
+        param['description'] = desc.value;
+
+        if (img_uploaded != null && img_uploaded.length > 0) {
+            param['image'] = img_uploaded;
+            param['image_file'] = img_file;
+        }
+        let res = await getJSON(url, param);
+        let json = await res.text();
+        let obj = JSON.parse(json);
+       if (obj !== undefined && obj.name !== undefined) {
+           alert("Food " + obj.name + " added sucessfully.")
+           window.location.replace("/viewPage?page=foodRatePage");
+       }
     }
     else {
         alert('Invalid input');
     }
 }
+
 async function addTravelProduct() {
     let url = '/addProduct';
     let name = document.getElementById('product_name');
@@ -288,17 +281,17 @@ async function render() {
             let obj = JSON.parse(json);
             let container2 = document.getElementById('container2');
             let html = '';
-            for (let i=0; i < obj.length; i++) {
-                let image = obj[i].image;
+            for (let i of obj) {
+                let image = i.image;
                 if (image === undefined || image === null  || image.length === 0) {
                     image = "./imgs/foodPic.jpg";
                 }
                 let htmlSegment = `<div class="itemCard">
-                <h1>${obj[i].name}</h1>
+                <h1>${i.name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downvote})</button>
-                <a href="viewPage?page=foodProductPage&name=${obj[i].name}">
+                <button type="button" class="btn btn-dark" id="${i.name}_upButton">Upvote (${i.upvote})</button>
+                <button type="button" class="btn btn-dark" id="${i.name}_downButton">Downvote (${i.downvote})</button>
+                <a href="viewPage?page=foodProductPage&name=${i.name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
                 </div>`;
@@ -355,26 +348,26 @@ async function render() {
             let obj = JSON.parse(json);
             let container2 = document.getElementById('container2');
             let html = '';
-            for (let i=0; i < obj.length; i++) {
-                let image = obj[i].image;
+            for (let i of obj) {
+                let image = i.image;
                 if (image === undefined || image === null  || image.length === 0) {
                     image = "./imgs/travelPic.jpg";
                 }
                 let htmlSegment = `<div class="itemCard">
-                <h1>${obj[i].name}</h1>
+                <h1>${i.name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downvote})</button>
-                <a href="viewPage?page=travelProductPage&name=${obj[i].name}">
+                <button type="button" class="btn btn-dark" id="${i.name}_upButton">Upvote (${i.upvote})</button>
+                <button type="button" class="btn btn-dark" id="${i.name}_downButton">Downvote (${i.downvote})</button>
+                <a href="viewPage?page=travelProductPage&name=${i.name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
                 </div>`;
                 html += htmlSegment;
             }
             container2.innerHTML = html;
-            for (let i=0; i < obj.length; i++) {
-                document.getElementById(obj[i].name + "_upButton").addEventListener('click', function() {upVote(obj[i].name)});
-                document.getElementById(obj[i].name + "_downButton").addEventListener('click', function() {downVote(obj[i].name)});
+            for (let i of obj) {
+                document.getElementById(i.name + "_upButton").addEventListener('click', function() {upVote(i.name)});
+                document.getElementById(i.name + "_downButton").addEventListener('click', function() {downVote(i.name)});
             }
         }
         else if (page === 'travelProductPage') {
@@ -382,6 +375,7 @@ async function render() {
         
             if (nameIndex > 0) {
                 let name = window.location.href.substr(nameIndex + 5);
+                console.log(name);
                 let param = {};
                 let url = '/productInfo';
                 param['name'] = name;
@@ -389,6 +383,7 @@ async function render() {
                 let res = await getJSON(url, param);
                 let json = await res.text();
                 let obj = JSON.parse(json);
+                console.log(obj);
                 let image = obj.image;
                 if (image === undefined || image === null  || image.length === 0) {
                     image = "./imgs/travelPic.jpg";
