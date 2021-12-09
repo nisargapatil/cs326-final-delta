@@ -46,7 +46,7 @@ async function upVote(name) {
     let res = await getJSON(url, param);
     let json = await res.text();
     let obj = JSON.parse(json);
-    document.getElementById(name + "_upButton").innerHTML = 'Upvote (' + obj.upvote + ')';
+    document.getElementById(name + "_upButton").innerHTML = 'Upvote (' + obj.upVote + ')';
 }
 
 async function downVote(name) {
@@ -57,7 +57,7 @@ async function downVote(name) {
     let res = await getJSON(url, param);
     let json = await res.text();
     let obj = JSON.parse(json);
-    document.getElementById(name + "_downButton").innerHTML = 'Downvote (' + obj.downvote + ')';
+    document.getElementById(name + "_downButton").innerHTML = 'Downvote (' + obj.downVote + ')';
 }
 
 async function addFoodProduct() {
@@ -83,7 +83,6 @@ async function addFoodProduct() {
         let obj = JSON.parse(json);
        if (obj !== undefined && obj.name !== undefined) {
            alert("Food " + obj.name + " added sucessfully.")
-           window.location.replace("/viewPage?page=foodRatePage");
        }
     }
     else {
@@ -199,7 +198,6 @@ async function addTravelProduct() {
         let obj = JSON.parse(json);
        if (obj !== undefined && obj.name !== undefined) {
            alert("Travel " + obj.name + " added sucessfully.")
-           window.location.replace("/viewPage?page=travelRatePage");
        }
     }
     else {
@@ -230,7 +228,6 @@ async function addEntertainmentProduct() {
         let obj = JSON.parse(json);
        if (obj !== undefined && obj.name !== undefined) {
            alert("Entertainment " + obj.name + " added sucessfully.")
-           window.location.replace("/viewPage?page=entertainmentRatePage");
        }
     }
     else {
@@ -303,8 +300,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downvote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=foodProductPage&name=${obj[i].name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
@@ -338,8 +335,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downvote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
 
                 html += htmlSegment;
@@ -377,8 +374,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downvote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=travelProductPage&name=${obj[i].name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
@@ -412,8 +409,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downvote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
 
                 html += htmlSegment;
@@ -451,8 +448,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downvote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_upButton">Upvote (${obj[i].upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj[i].name}_downButton">Downvote (${obj[i].downVote})</button>
                 <a href="viewPage?page=entertainmentProductPage&name=${obj[i].name}">
                     <button type="button" button type="submit" class="btn btn-dark" href="#">View</button>
                 </a>
@@ -486,8 +483,8 @@ async function render() {
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
                 <img src="${image}" width="200" height="200"><br><br>
-                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upvote})</button>
-                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downvote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_upButton">Upvote (${obj.upVote})</button>
+                <button type="button" class="btn btn-dark" id="${obj.name}_downButton">Downvote (${obj.downVote})</button>
                 </div>`;
 
                 html += htmlSegment;

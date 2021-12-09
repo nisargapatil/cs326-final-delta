@@ -9,34 +9,26 @@ import pgp from 'pg-promise';
 
 let product_id;
 let user_id;
-let secrets;
 let port = process.env.PORT || 8080;
 let session_id = 0x10000;
 let sessions = [];
-let user;
-let password;
-let db_url;
-
-if (!process.env.PASSWORD) {
-    secrets = JSON.parse(readFileSync('secret.json'));
-    password = secrets.password;
-} else {
-    password = process.env.PASSWORD;
-}
-if (!process.env.USER) {
-    secrets = JSON.parse(readFileSync('secret.json'));
+let user = '';
+let password = '';
+if (existsSync('secret.json')) {
+    secrets = JSON.parse(readFileSync("/app/secret.json"));
     user = secrets.user;
-} else {
-    user = process.env.USER;
+    password = secrets.password;
 }
-if (!process.env.DATABASE_URL) {
-    db_url = `postgres://${user}:${password}@localhost/`;
-}
-else {
-    db_url = process.env.DATABASE_URL;
-}
+let db_url = process.env.DATABASE_URL || `postgres://${user}:${password}@localhost/`;
 
-const db = pgp()(db_url);
+let ssl = {rejectUnauthorized: false}
+
+let postgresConfig = {
+    connectionString: db_url,
+    max: 30,
+    ssl: ssl
+}
+const db = pgp()(postgresConfig);
 
 async function connectAndRun(task) {
     let connection = null;
@@ -57,34 +49,244 @@ async function connectAndRun(task) {
     }
 }
 
-async function addProduct(id, name, category, description, upvote, downvote) {
-    await connectAndRun(db => db.none('INSERT INTO products VALUES ($1, $2, $3,$4,$5,$6);', [id, name, category, description, upvote, downvote]));
+function addProductCallback(res, name) {
+    let prod = {};
+    prod['name'] = name;
+    res.writeHead(200);
+    res.write(JSON.stringify(prod));
+    res.end();
+}
+
+async function addProduct(res, id, name, category, description, image_file, image, upvote, downvote) {
+    try {
+        const db_result = db.none('insert into products (id, name, category, description, image, upvote, downvote) values ($1, $2, $3, $4, $5, $6, $7)',
+            [id, name, category, description,  image, upvote, downvote])
+            .then(function(result) {
+                addProductCallback(res, name);
+            })
+            .catch(function(error) {
+                console.log("addProduct error " + error.message);
+            });
+    }
+    catch (e) {
+    }
 }
 
 async function deleteProduct(name) {
-    await connectAndRun(db => db.result('DELETE FROM products WHERE name = ($1);', [name]));
+    return await connectAndRun(db => db.result('DELETE FROM products WHERE name = ($1);', [name]));
 }
 
-async function addUser(name, pw, email, id) {
-    await connectAndRun(db => db.none('INSERT INTO users VALUES ($1, $2, $3, $4);', [name, pw, email, id]));
+function addUserCallback(res, name) {
+    let param = {};
+    param['username'] = name;
+    res.writeHead(200);
+    res.write(JSON.stringify(param));
+    res.end();
 }
 
-async function upVote(name) {
-    await connectAndRun(db => db.any('UPDATE products SET upvote = upvote+1 where name = ($1);', [name]));
+async function addUser(res, name, pw, email, id) {
+    try {
+        const db_result = db.none('insert into users (name, password, email, id) values ($1, $2, $3, $4)', [name, pw, email, id])
+            .then(function(result) {
+                addUserCallback(res, name);
+            })
+            .catch(function(error) {
+                
+            });
+    }
+    catch (e) {
+    }
 }
 
-async function downVote(name) {
-    await connectAndRun(db => db.any('UPDATE products SET downvote = downvote-1 where name = ($1);', [name]));
+function upVoteCallback(res, name, count) {
+    let prod = {};
+    prod['name'] = name;
+    prod['upvote'] = count.toString();
+    console.log('Upvote count ' + prod['upvote']);
+    if (prod !== undefined) {
+        res.writeHead(200);
+        res.write(JSON.stringify(prod));
+    }
+    else {
+        res.writeHead(404);
+    }
+    res.end();
 }
+
+async function upVote(res, name, count) {
+    try {
+        let vote = parseInt(count, 10) + 1;
+        const db_result = db.none('update products set upvote = ($1) where name = ($2)', [vote, name])
+            .then(function(result) {
+                upVoteCallback(res, name, vote);
+            })
+            .catch(function(error) {
+                console.log(error.message)
+            });
+    }
+    catch (e) {
+    }
+}
+
+function selectVoteCallback(res, result, name) {
+    if (result != null) {
+        upVote(res, name, result[0].upvote)
+    }
+}
+
+async function selectVote(res, name) {
+    try {
+        const db_result = db.any('select upvote from products where name = ($1) limit 1', [name])
+            .then(function(result) {
+                selectVoteCallback(res, result, name);
+            })
+            .catch(function(error) {
+                console.log("selectVote " + name + ", error: " + error.message);
+            });
+    }
+    catch (e) {
+    }
+}
+
+function downVoteCallback(res, name, count) {
+    let prod = {};
+    prod['name'] = name;
+    prod['downvote'] = count.toString();
+    if (prod !== undefined) {
+        res.writeHead(200);
+        res.write(JSON.stringify(prod));
+    }
+    else {
+        res.writeHead(404);
+    }
+    res.end();
+}
+
+async function downVote(res, name, count) {
+    try {
+        let vote = parseInt(count, 10) + 1;
+        const db_result = db.none('update products set downvote = ($1) where name = ($2)', [vote, name])
+        .then(function(result) {
+            downVoteCallback(res, name, vote);
+        })
+        .catch(function(error) {
+            console.log(error.message)
+        });
+
+    }
+    catch (e) {
+    }
+}
+
+function selectDownVoteCallback(res, result, name) {
+    if (result != null) {
+        downVote(res, name, result[0].downvote)
+    }
+}
+
+async function selectDownVote(res, name) {
+    try {
+        const db_result = db.any('select downvote from products where name = ($1) limit 1', [name])
+            .then(function(result) {
+                selectDownVoteCallback(res, result, name);
+            })
+            .catch(function(error) {
+                console.log("selectDownVote " + name + ", error: " + error.message);
+                res.end();
+            });
+    }
+    catch (e) {
+    }
+}
+
+
 
 async function findProduct(name) {
-    await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));
+    return await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));
 }
 
-async function findUser(name) {
-    await connectAndRun(db => db.none('SELECT * FROM users WHERE name = ($1);', [name]));
+function findUserCallback(res, result, name, password) {
+    if (result !== null && result[0].password === password) {
+        let param = {};
+        param['username'] = name;
+        sessions.push(session_id);
+        res.writeHead(200, { 'Set-Cookie': 'session_id=' + (session_id++) });
+        res.write(JSON.stringify(param));
+    }
+    else {
+        res.writeHead(404);
+        res.write('Error logging in as user ' + name);
+    }
+    res.end();
 }
 
+async function findUser(res, user, password) {
+    try {
+        const db_result = db.any('select name, password from users where name = ($1) limit 1', [user])
+            .then(function(result) {
+                findUserCallback(res, result, user, password);
+            })
+            .catch(function(error) {
+                console.log("Error finding user " + user + " " + password + " " + error.message);
+                res.writeHead(404);
+                res.end();
+            });
+    }
+    catch (e) {
+        console.log("Failed to find user");
+    }
+}
+
+function productSummaryCallback(res, result, category) {
+    let prod = [];
+    for (let i=0; i <result.length; i++) {
+        if (category === result[i].category) {
+            prod.push(result[i]);
+        }
+    }
+    res.write(JSON.stringify(prod));
+    res.end();
+}
+
+async function productSummary(res, category) {
+    try {
+        const db_result = db.any('select * from products where category = ($1)', [category])
+            .then(function(result) {
+                productSummaryCallback(res, result, category);
+            })
+            .catch(function(error) {
+                console.log("Error finding product summary " + error.message);
+            });
+    }
+    catch (e) {
+        console.log("Failed to select products category");
+    }
+}
+
+function productInfoCallback(res, result, name) {
+    if (result != null) {
+        res.write(JSON.stringify(result[0]));
+    }
+    else {
+        response.writeHead(404);
+    }
+    res.end();
+}
+
+async function productInfo(res, name) {
+    try {
+        const db_result = db.any('select * from products where name = ($1) limit 1', [name])
+            .then(function(result) {
+                productInfoCallback(res, result, name);
+            })
+            .catch(function(error) {
+                console.log("Error finding product info " + error.message);
+            });
+    }
+    catch (e) {
+        console.log("Failed to select products info");
+    }
+}
 
 
 function sendFileContent(response, fileName, contentType) {
@@ -113,9 +315,9 @@ function saveImage(imageFile, image) {
     if (index > 0) {
         extension = imageFile.slice(index + 1);
         file_name = imageFile.slice(0, index);
-        file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);
+        file_path = path.join("imgs/", file_name + "_" + (id++) + "." + extension);
         while (existsSync(file_path)) {
-            file_path = path.join("./imgs/", file_name + "_" + (id++) + "." + extension);
+            file_path = path.join("imgs/", file_name + "_" + (id++) + "." + extension);
         }
         // strip off the data: url prefix to get just the base64-encoded bytes
         let data = image.replace(/^data:image\/\w+;base64,/, "");
@@ -134,12 +336,9 @@ createServer(async (req, res) => {
         let body = '';
         req.on('data', data => body += data);
         req.on('end', async () => {
-            let param = {};
             const data = JSON.parse(body);
             user_id = uuid();
-            addUser(data.name, data.password, data.email, user_id);
-            res.writeHead(200);
-            res.end();
+            addUser(res, data.name, data.password, data.email, user_id);
         });
     }
     else if (parsed.pathname === '/login') {
@@ -147,18 +346,7 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
-            let u = findUser(data.name);
-            if (u !== null && u.password === data.password) {
-                let param = {};
-                param['username'] = prod.name;
-                sessions.push(session_id);
-                res.writeHead(200, { 'Set-Cookie': 'session_id=' + (session_id++) });
-            }
-            else {
-                res.writeHead(404);
-                res.write('Error logging in as user ' + data.name);
-            }
-            res.end();
+            findUser(res, data.username, data.password);
         });
     }
     else if (parsed.pathname === '/logout') {
@@ -172,34 +360,25 @@ createServer(async (req, res) => {
     else if (parsed.pathname === '/addProduct') {
         let body = '';
         let prod;
-        let image_path;
+        let image;
+        let image_file;
         req.on('data', data => body += data);
         req.on('end', () => {
             const data = JSON.parse(body);
             product_id = uuid();
             if (data.image_file != null) {
-                image_path = saveImage(data.image_file, data.image);
-                if (image_path != null) {
-                    data.image = image_path;
+                image = saveImage(data.image_file, data.image);
+                if (image === null) {
+                    image = "";
                 }
-                else {
-                    data.image = "";
-                }
+                image_file = "";
             }
             else {
-                data.image = "";
+                image = "";
+                image_file = "";
             }
 
-            addProduct(product_id, data.name, data.category, data.description, 0, 0);
-            let prod = JSON.parse(findProduct(data.name));
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-            }
-            res.end();
+            addProduct(res, product_id, data.name, data.category, data.description, image_file, image, 0, 0);
         });
     }
     else if (parsed.pathname === '/productInfo') {
@@ -208,24 +387,15 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            prod = JSON.parse(findProduct(obj.name));
-            res.write(JSON.stringify(prod));
-            res.end();
+            productInfo(res, obj.name);
         });
     }
     else if (parsed.pathname === '/productSummary') {
         let body = '';
-        let prod = [];
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            for (let i of database.products) {
-                if (obj.category === i.category) {
-                    prod.push(i);
-                }
-            }
-            res.write(JSON.stringify(prod));
-            res.end();
+            productSummary(res, obj.category);
         });
     }
     else if (parsed.pathname === '/upvote') {
@@ -233,16 +403,7 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            let prod = JSON.parse(findProduct(obj.name));
-            upVote(obj.name);
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-            }
-            res.end();
+            selectVote(res, obj.name);
         });
     }
     else if (parsed.pathname === '/downvote') {
@@ -251,16 +412,7 @@ createServer(async (req, res) => {
         req.on('data', data => body += data);
         req.on('end', () => {
             let obj = JSON.parse(body);
-            downVote(obj.name);
-            let prod = JSON.parse(findProduct(obj.name));
-            if (prod !== undefined) {
-                res.writeHead(200);
-                res.write(JSON.stringify(prod));
-            }
-            else {
-                res.writeHead(404);
-            }
-            res.end();
+            selectDownVote(res, obj.name);
         });
     }
     else if (parsed.pathname === '/deleteProduct') {
