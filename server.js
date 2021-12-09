@@ -1,7 +1,7 @@
 'use strict';
 import { createServer } from 'http';
 import { parse } from 'url';
-import { readFile, writeFile, readFileSync, existsSync, fstat } from 'fs';
+import { readFile, writeFile, readFileSync, existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import path from 'path';
 import pgp from 'pg-promise';
@@ -15,7 +15,7 @@ let user = '';
 let password = '';
 
 if (existsSync('secret.json')) {
-    secrets = JSON.parse(readFileSync("/app/secret.json"));
+    let secrets = JSON.parse(readFileSync("secret.json"));
     user = secrets.user;
     password = secrets.password;
 }
