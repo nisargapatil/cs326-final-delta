@@ -20,7 +20,7 @@ if (existsSync('secret.json')) {
     password = secrets.password;
 }
 
-let db_url = process.env.DATABASE_URL || `postgres://${user}:${password}@localhost/`;
+let db_url = process.env.DATABASE_URL;
 
 let ssl = {rejectUnauthorized: false}
 
@@ -199,8 +199,6 @@ async function selectDownVote(res, name) {
     catch (e) {
     }
 }
-
-
 
 async function findProduct(name) {
     return await connectAndRun(db => db.none('SELECT * FROM products WHERE name = ($1);', [name]));

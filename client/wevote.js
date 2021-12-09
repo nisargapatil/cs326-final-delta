@@ -64,16 +64,13 @@ async function addFoodProduct() {
     let url = '/addProduct';
     let name = document.getElementById('product_name');
     let desc = document.getElementById('product_desc');
-    let detail = document.getElementById('product_detail');
 
     if (name !== undefined && name.value.length > 0 &&
-        desc !== undefined && desc.value.length > 0 &&
-        detail !== undefined && detail.value.length > 0) {
+        desc !== undefined && desc.value.length > 0 ) {
         let param = {};
         param['name'] = name.value;
         param['category'] = 'food';
         param['description'] = desc.value;
-        param['details'] = detail.value;
         if (img_uploaded != null && img_uploaded.length > 0) {
             param['image'] = img_uploaded;
             param['image_file'] = img_file;
@@ -180,16 +177,14 @@ async function addTravelProduct() {
     let url = '/addProduct';
     let name = document.getElementById('product_name');
     let desc = document.getElementById('product_desc');
-    let detail = document.getElementById('product_detail');
 
     if (name !== undefined && name.value.length > 0 &&
-        desc !== undefined && desc.value.length > 0 &&
-        detail !== undefined && detail.value.length > 0) {
+        desc !== undefined && desc.value.length > 0 ) {
         let param = {};
         param['name'] = name.value;
         param['category'] = 'Travel';
         param['description'] = desc.value;
-        param['details'] = detail.value;
+
         if (img_uploaded != null && img_uploaded.length > 0) {
             param['image'] = img_uploaded;
             param['image_file'] = img_file;
@@ -211,16 +206,14 @@ async function addEntertainmentProduct() {
     let url = '/addProduct';
     let name = document.getElementById('product_name');
     let desc = document.getElementById('product_desc');
-    let detail = document.getElementById('product_detail');
 
     if (name !== undefined && name.value.length > 0 &&
-        desc !== undefined && desc.value.length > 0 &&
-        detail !== undefined && detail.value.length > 0) {
+        desc !== undefined && desc.value.length > 0 ) {
         let param = {};
         param['name'] = name.value;
         param['category'] = 'Entertainment';
         param['description'] = desc.value;
-        param['details'] = detail.value;
+
         if (img_uploaded != null && img_uploaded.length > 0) {
             param['image'] = img_uploaded;
             param['image_file'] = img_file;
@@ -352,13 +345,6 @@ async function render() {
 
                 html += htmlSegment;
 
-                htmlSegment = `<div class="itemCard">
-                                <h3>Reviews</h3>
-                        <span id="otherDetails"></span>
-                        </div>`;
-
-                html += htmlSegment;
-
                 container2.innerHTML = html;
             }
         }
@@ -424,14 +410,7 @@ async function render() {
                     ${obj.description}
                 </div>`;
 
-                html += htmlSegment;
-
-                htmlSegment = `<div class="itemCard">
-                                <h3>Reviews</h3>
-                        <span id="otherDetails"></span>
-                        </div>`;
-
-                html += htmlSegment;                 
+                html += htmlSegment;               
 
                 container2.innerHTML = html;
             }
@@ -497,13 +476,6 @@ async function render() {
                     <span id="productDescription"></span>
                     ${obj.description}
                 </div>`;
-
-                html += htmlSegment;
-
-                htmlSegment = `<div class="itemCard">
-                                <h3>Reviews</h3>
-                        <span id="otherDetails"></span>
-                        </div>`;
 
                 html += htmlSegment;
 
