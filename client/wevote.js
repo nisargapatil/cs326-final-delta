@@ -276,7 +276,7 @@ async function render() {
 
         if (page === 'foodRatePage') {
             let url = '/productSummary';
-            let res = await getJSON(url, {category: 'food'});
+            let res = await getJSON(url, {category: 'Food'});
             let json = await res.text();
             let obj = JSON.parse(json);
             let container2 = document.getElementById('container2');
@@ -491,6 +491,7 @@ async function render() {
                 <br>
                 <button type="button" class="btn" id="addFood_button">Create Poll</button>
             </form>`;
+
             let container = document.getElementById('container');
             container.innerHTML = html;
             document.getElementById("addFood_button").addEventListener('click', function() {addFoodProduct()});

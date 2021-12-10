@@ -326,7 +326,6 @@ function saveImage(imageFile, image) {
             if (err) throw err;
         });
     }
-
     return file_path;
 }
 
@@ -377,7 +376,6 @@ createServer(async (req, res) => {
                 image = "";
                 image_file = "";
             }
-
             addProduct(res, product_id, data.name, data.category, data.description, image_file, image, 0, 0);
         });
     }
