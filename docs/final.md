@@ -24,46 +24,55 @@ Our application is deployed on heroku on this link: https://wevote326.herokuapp.
 
 Our UI has fpur main compoments: Home Page, Rating Pages, Product Pages, Create Poll Page
 
-# Home Page
+### Home Page
 
 This is how the home page looks when you first go to the heroku link. You can see the Food, Travel, and Entertainment categories to choose from, as well as create account and log in buttons at the top.
+
 ![Home Page](Final_Screenshots/HomePage.png)
 
 If you try to select a category before creating your account or logging into your existing one, you will get this alert.
+
 ![Alert](Final_Screenshots/HomePageAlert.png)
 
 When the user selects create account, they will be redirected to this form to fill out their details and create an account.
+
 ![Create](Final_Screenshots/CreateAccount.png)
 
 If the user wants to log in instead, they will be redirected to this form to enter their username and password.
+
 ![Log In](Final_Screenshots/Login.png)
 
 
-# Rating Pages
+### Rating Pages
 
 Once the user is logged in and selects a category, they will be able to view all the products and corresponding ratings on that page.
 
 Depending on the chosen category, these are the pages you will be redirected to:
 
 1. Food
+
 ![Food](Final_Screenshots/FoodRating.png)
 
 2. Entertainment
+
 ![Entertainment](Final_Screenshots/EntertainmentRating.png)
 
 3. Travel 
+
 ![Travel](Final_Screenshots/TravelRating.png)
 
-# Product Pages
+### Product Pages
 
 When you click on 'view' on one of the featured products, it takes you to the product details page which displays the upvotes and downvotes on the product, and its description added by the user. 
 
 For example, if you wanted to view more details about 'Stranger Things' on the 'Entertainment' page, this is what you will find : 
+
 ![Details](Final_Screenshots/ViewProduct.png)
 
-# Create Poll Page
+### Create Poll Page
 
 If you click on 'Add Item' on the ratings page, you will be able to create your own rating poll for whichever product you use. You simply have to enter the information in this form, and the product will be added to that catgeory.
+
 ![Poll](Final_Screenshots/FoodPoll.png)
 
 
