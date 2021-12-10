@@ -1,0 +1,90 @@
+body{
+    background: url(../imgs/clouds.jpg); 
+    background-size: 220vh;
+    background-repeat: no-repeat;
+    padding: 20px;
+}
+.log-container{
+    padding: 50px;
+    top:40px; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+
+.itemCardx{
+    width: 400px;
+    height: auto;
+    margin-bottom: 15px;
+    background: rgba(250, 250, 250, 0.5);
+    padding: 20px;
+    border-radius: 25px;
+    display: grid;
+    justify-content: space-evenly;
+    justify-items: center;
+    align-content: space-evenly;
+    align-items: center;
+}
+
+.container{
+    text-align: center;
+}
+.container2{
+    background-size: cover;
+    margin-top: 70px; 
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column: 20px;
+}
+
+.title{
+    margin-top: 60px;
+}
+@media(max-width: 1400px){
+    .container2{
+        grid-template-columns: 1fr 1fr;
+        justify-content: space-evenly;
+        justify-items: center;
+        align-content: space-evenly;
+        align-items: center;
+    }
+}
+@media(max-width: 1000px){
+    .container2{
+        grid-template-columns: 1fr;
+        justify-content: space-evenly;
+        justify-items: center;
+        align-content: space-evenly;
+        align-items: center;
+    }
+}
+.button1{
+    display: flex;
+    float: left;   
+}
+
+.button2{
+    display: flex;
+    float: right;
+    margin: 5px;
+    
+}
+.button3{
+    display: flex;
+    float: right;
+    margin: 5px;
+}
+.itemCard{
+    width: 400px;
+    height: auto;
+    margin-bottom: 15px;
+    background: rgba(250, 250, 250, 0.5);
+    padding: 20px;
+    border-radius: 25px;
+}
+
+img{
+    border-radius: 25%;
+}

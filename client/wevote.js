@@ -1,6 +1,8 @@
-let img_uploaded = "";
-let img_file = "";
-let login_user = "";
+
+
+let img_uploaded;
+let img_file;
+let login_user;
 
 function isLogin() {
     let isLogin = false;
@@ -284,7 +286,7 @@ async function render() {
             for (let i of obj) {
                 let image = i.image;
                 if (image === undefined || image === null  || image.length === 0) {
-                    image = "./imgs/foodPic.jpg";
+                    image = "../imgs/foodPic.jpg";
                 }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${i.name}</h1>
@@ -319,7 +321,7 @@ async function render() {
                 let html = '';
                 let image = obj.image;
                 if (image === undefined || image === null  || image.length === 0) {
-                    image = "./imgs/foodPic.jpg";
+                    image = "../imgs/foodPic.jpg";
                 }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj.name}</h1>
@@ -351,7 +353,7 @@ async function render() {
             for (let i of obj) {
                 let image = i.image;
                 if (image === undefined || image === null  || image.length === 0) {
-                    image = "./imgs/travelPic.jpg";
+                    image = "../imgs/travelPic.jpg";
                 }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${i.name}</h1>
@@ -386,7 +388,7 @@ async function render() {
                 console.log(obj);
                 let image = obj.image;
                 if (image === undefined || image === null  || image.length === 0) {
-                    image = "./imgs/travelPic.jpg";
+                    image = "../imgs/travelPic.jpg";
                 }
                 let container2 = document.getElementById('container2');
                 let html = '';
@@ -420,7 +422,7 @@ async function render() {
             for (let i=0; i < obj.length; i++) {
                 let image = obj[i].image;
                 if (image === undefined || image === null || image.length === 0) {
-                    image = "./imgs/movie.jpg";
+                    image = "../imgs/movie.jpg";
                 }
                 let htmlSegment = `<div class="itemCard">
                 <h1>${obj[i].name}</h1>
@@ -453,7 +455,7 @@ async function render() {
                 let obj = JSON.parse(json);
                 let image = obj.image;
                 if (image === undefined || image === null  || image.length === 0) {
-                    image = "./imgs/movie.jpg";
+                    image = "../imgs/movie.jpg";
                 }
                 let container2 = document.getElementById('container2');
                 let html = '';

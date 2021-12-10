@@ -1,7 +1,6 @@
 'use strict';
 
 function select(id){
-    // document.getElementById(id).classList.add("active");
     if(id=="Op1"){
         window.location = "viewPage?page=foodRatePage";
     }

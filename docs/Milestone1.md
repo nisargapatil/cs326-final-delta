@@ -35,7 +35,7 @@ Web App Screenshots:
 ![](Web_App_Screenshots/homepageAlert.png)
 ![image](https://user-images.githubusercontent.com/86131546/138569533-e65a3c91-b3ea-402f-96f7-b3ada159b4a9.png)
 ![](Web_App_Screenshots/poll.png)
-[](Web_App_Screenshots/logIn.png)
+![](Web_App_Screenshots/logIn.png)
 ![](Web_App_Screenshots/createAccount.png)
 ![](Web_App_Screenshots/entertainmentRatePage.png)
 ![](Web_App_Screenshots/entertainmentCreatePoll.png)

@@ -5,6 +5,7 @@ import { readFile, writeFile, readFileSync, existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import path from 'path';
 import pgp from 'pg-promise';
+import { error } from 'console';
 
 let product_id;
 let user_id;
@@ -14,15 +15,17 @@ let sessions = [];
 let user = '';
 let password = '';
 
+console.log("Starting server");
+
 if (existsSync('secret.json')) {
     let secrets = JSON.parse(readFileSync("secret.json"));
     user = secrets.user;
     password = secrets.password;
 }
 
-let db_url = process.env.DATABASE_URL;
+let db_url = process.env.DATABASE_URL || `postgres://${user}:${password}@localhost/`;
 
-let ssl = {rejectUnauthorized: false}
+let ssl = { rejectUnauthorized: false }
 
 let postgresConfig = {
     connectionString: db_url,
@@ -45,6 +48,7 @@ async function connectAndRun(task) {
     finally {
         try {
             connection.done();
+            console.log("Connected to the database")
         }
         catch (ignored) {
         }
@@ -63,14 +67,15 @@ async function addProduct(res, id, name, category, description, image_file, imag
     try {
         const db_result = db.none('insert into products (id, name, category, description, image, upvote, downvote) values ($1, $2, $3, $4, $5, $6, $7)',
             [id, name, category, description, image, upvote, downvote])
-            .then(function(result) {
+            .then(function (result) {
                 addProductCallback(res, name);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log("Error while adding product" + error.message);
             });
     }
     catch (e) {
+        console.log("error");
     }
 }
 
@@ -89,14 +94,12 @@ function addUserCallback(res, name) {
 async function addUser(res, name, pw, email, id) {
     try {
         const db_result = db.none('insert into users (name, password, email, id) values ($1, $2, $3, $4)', [name, pw, email, id])
-            .then(function(result) {
+            .then(function (result) {
                 addUserCallback(res, name);
             })
-            .catch(function(error) {
-                
-            });
     }
     catch (e) {
+        console.log("error");
     }
 }
 
@@ -119,14 +122,15 @@ async function upVote(res, name, count) {
     try {
         let vote = parseInt(count, 10) + 1;
         const db_result = db.none('update products set upvote = ($1) where name = ($2)', [vote, name])
-            .then(function(result) {
+            .then(function (result) {
                 upVoteCallback(res, name, vote);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error.message)
             });
     }
     catch (e) {
+        console.log("error");
     }
 }
 
@@ -139,14 +143,15 @@ function selectVoteCallback(res, result, name) {
 async function selectVote(res, name) {
     try {
         const db_result = db.any('select upvote from products where name = ($1) limit 1', [name])
-            .then(function(result) {
+            .then(function (result) {
                 selectVoteCallback(res, result, name);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log("selectVote " + name + ", error: " + error.message);
             });
     }
     catch (e) {
+        console.log("error");
     }
 }
 
@@ -168,15 +173,16 @@ async function downVote(res, name, count) {
     try {
         let vote = parseInt(count, 10) + 1;
         const db_result = db.none('update products set downvote = ($1) where name = ($2)', [vote, name])
-        .then(function(result) {
-            downVoteCallback(res, name, vote);
-        })
-        .catch(function(error) {
-            console.log(error.message)
-        });
+            .then(function (result) {
+                downVoteCallback(res, name, vote);
+            })
+            .catch(function (error) {
+                console.log(error.message)
+            });
 
     }
     catch (e) {
+        console.log("error");
     }
 }
 
@@ -189,15 +195,16 @@ function selectDownVoteCallback(res, result, name) {
 async function selectDownVote(res, name) {
     try {
         const db_result = db.any('select downvote from products where name = ($1) limit 1', [name])
-            .then(function(result) {
+            .then(function (result) {
                 selectDownVoteCallback(res, result, name);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log("selectDownVote " + name + ", error: " + error.message);
                 res.end();
             });
     }
     catch (e) {
+        console.log("error");
     }
 }
 
@@ -223,10 +230,10 @@ function findUserCallback(res, result, name, password) {
 async function findUser(res, user, password) {
     try {
         const db_result = db.any('select name, password from users where name = ($1) limit 1', [user])
-            .then(function(result) {
+            .then(function (result) {
                 findUserCallback(res, result, user, password);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log("Error finding user " + user + " " + password + " " + error.message);
                 res.writeHead(404);
                 res.end();
@@ -251,10 +258,10 @@ function productSummaryCallback(res, result, category) {
 async function productSummary(res, category) {
     try {
         const db_result = db.any('select * from products where category = ($1)', [category])
-            .then(function(result) {
+            .then(function (result) {
                 productSummaryCallback(res, result, category);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log("Error finding product summary " + error.message);
             });
     }
@@ -276,10 +283,10 @@ function productInfoCallback(res, result, name) {
 async function productInfo(res, name) {
     try {
         const db_result = db.any('select * from products where name = ($1)', [name])
-            .then(function(result) {
+            .then(function (result) {
                 productInfoCallback(res, result, name);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log("Error finding product info " + error.message);
             });
     }
